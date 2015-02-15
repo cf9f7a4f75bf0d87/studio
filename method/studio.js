@@ -12,13 +12,13 @@ function toLower(val){
 
 var newsSchema=mongoose.Schema({
 
-    ntitle: String,//新闻题目
+    ntitle: {type:String},//新闻题目
 
-    npic: String,//新闻配图url
+    npic: {type:String},//新闻配图url
 
-    ncontent: String,//新闻内容
+    ncontent: {type:String},//新闻内容
 
-    npublisher: String,//发布者
+    npublisher: {type:String},//发布者
 
     npubTime: {type:Date,default:Date()}//发布时间
 
@@ -27,11 +27,11 @@ var newsSchema=mongoose.Schema({
 var eventSchema=mongoose.Schema({//大事件
 
 
-    etitle:String,//事件标题
+    etitle:{type:String},//事件标题
 
-    epics:[String],//大事件图组 url
+    epics:[{type:String}],//大事件图组 url
 
-    econtent:String,//大事件内容
+    econtent:{type:String},//大事件内容
 
     epubTime:{type:Date,default:Date()}//发布时间
 
@@ -39,21 +39,21 @@ var eventSchema=mongoose.Schema({//大事件
 
 var achievementSchema=mongoose.Schema({//成就集合
 
-    atitle:String,//成就标题
+    atitle:{type:String},//成就标题
 
-    apic:[String],//成就图片url
+    apic:{type:String},//成就图片url
 
     atime:{type:Date,default:Date()},//时间
 
-    acontent:String//成就内容
+    acontent:{type:String}//成就内容
 
 });
 
 var exampleSchema=mongoose.Schema({//榜样集合,
 
-    etitle: String,//榜样名称（或者名字）
+    etitle: {type:String},//榜样名称（或者名字）
 
-    epic: String,//图url
+    epic: {type:String},//图url
 
     etime:{type:Date,default:Date()},
 
@@ -62,13 +62,13 @@ var exampleSchema=mongoose.Schema({//榜样集合,
 });
 var cultureSchema = mongoose.Schema(//文化 (包含于studio,用于介绍工作室..)
 
-    {cname:String,ccontent:String}//文化id，名字，内容
+    {cname:{type:String},ccontent:{type:String},ctime:{type:Date,default:Date()}}//文化id，名字，内容
 
 );
 
 //回复。。
 var revisionSchema = mongoose.Schema(
-    {uname:String,uemail:String,mcontent:String,mtime:{type:Date,default:Date()}}
+    {uname:{type:String},uemail:{type:String},mcontent:{type:String},mtime:{type:Date,default:Date()}}
 )
 
 //新增--各个组发布的信息。。
@@ -76,10 +76,11 @@ var revisionSchema = mongoose.Schema(
  * 组别，发布人，发布（更新时间），关联图片。。
  */
 var omsgSchema = mongoose.Schema({
-    ogroup:String,
-    oleader:String,
+    ogroup:{type:String},
+    oleader:{type:String},
     otime:{type:Date,default:Date()},
-    ocontent:String,
+    uptime:{type:Date,default:Date()},
+    ocontent:{type:String},
     opic:String
 });
 
@@ -99,9 +100,9 @@ var studioSchema= mongoose.Schema({
 
 
 
-        sname:String,//工作室名称
+        sname:{type:String},//工作室名称
 
-        scontent:String,//介绍
+        scontent:{type:String},//介绍
 
         svisited:Number,//访问次数
 
@@ -109,13 +110,19 @@ var studioSchema= mongoose.Schema({
 
         steacher:[{type:Schema.Types.ObjectId,ref:'user'}],//指导教师
 
+        teacher:{type:String},  //指导教师
+
         sleader:[{type:Schema.Types.ObjectId,ref:'user'}],//负责人
+
+        leader:{type:String},
 
         stelephone:Number,//联系电话
 
-        semail:String,//邮箱
+        semail:{type:String},//邮箱
 
-        saddress:String,//地址
+        saddress:{type:String},//地址
+
+        uptime:{type:Date},
 
         sculture:[//文化集合
 
@@ -132,13 +139,13 @@ var studioSchema= mongoose.Schema({
 
             {
 
-                smid:String,//id
+                smid:{type:String},//id
 
-                uname:String,//反馈人姓名
+                uname:{type:String},//反馈人姓名
 
-                uemail:String,//反馈人邮箱
+                uemail:{type:String},//反馈人邮箱
 
-                mcontent:String,//反馈内容
+                mcontent:{type:String},//反馈内容
 
                 mtime:{type:Date,default:Date()},//反馈时间
 
@@ -146,7 +153,7 @@ var studioSchema= mongoose.Schema({
 
                 reversions:[//针对这个反馈的回复
 
-                    {uname:String,uemail:String,mcontent:String,mtime:{type:Date,default:Date()}}//回复id，发送人，其邮箱，内容，时间
+                    {uname:{type:String},uemail:{type:String},mcontent:{type:String},mtime:{type:Date,default:Date()}}//回复id，发送人，其邮箱，内容，时间
                 ]
 
             }
@@ -157,13 +164,13 @@ sleaveMessages:[//留言（内容同用户反馈）
 
     {
 
-       // smid:String,//留言id 时间戳+随机数,手动生成
+       // smid:{type:String},//留言id 时间戳+随机数,手动生成
 
-        uname:String,//留言者雅号
+        uname:{type:String},//留言者雅号
 
-        uemail:String,
+        uemail:{type:String},
 
-        mcontent:String,//留言内容
+        mcontent:{type:String},//留言内容
 
         mtime:{type:Date,default: new Date()},//留言时间
 
@@ -188,7 +195,7 @@ sprojectMessages:[//项目申请
 
         pid:{type:Schema.Types.ObjectId,ref:'project'},//項目id
 
-        uname:String,//申请人姓名
+        uname:{type:String},//申请人姓名
 
         uemail:{type:String,default:null},//申请人邮箱
 
@@ -208,11 +215,11 @@ joinMessages:[//加入申请
 
         uid:{type:Schema.Types.ObjectId,ref:'user'},//id
 
-        uname:String,//申请人姓名
+        uname:{type:String},//申请人姓名
 
-        uemail:String,//申请人邮箱
+        uemail:{type:String},//申请人邮箱
 
-        mcontent:String,//申请人说明
+        mcontent:{type:String},//申请人说明
 
         gid:{type:Schema.Types.ObjectId,ref:'project'},
 

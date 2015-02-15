@@ -53,7 +53,6 @@ router.post('/infoEdit',function(req,res){
     var userGrade=req.body.userGrade;
     var userNickName=req.body.userNickName;
     var _id=req.session._id;
-    console.log(userId + "*****************");
     userCl.infoEdit(_id,userId,userEmail,userGrade,userNickName,function(err){
         if(err) res.render('error',{message:err});
         else{ res.render("ok",{message:"更新成功.."});}
@@ -192,7 +191,6 @@ router.get('/skillSame', function(req,res) {
 
 //项目信息..
 router.get('/projectInfo', function(req,res) {
-    console.log('get...request..');
     var username=req.session.name;
     userCl.userProjectInfo(username,function(err,data){
         if(err)res.render('error',{message:err});
@@ -302,13 +300,13 @@ router.post('/joinGroup', function(req,res) {
     var username=req.session.name;
 
     userCl.joinGroup(username,req.body.groupId,req.body.content,function(error,num){
-        if(error) return handleError(error);
+        if(error)    res.render('error',{message:error});
         else{
             if(num===1){
-                return res.render('ok',{message:"your request is sent.."});
+                 res.render('ok',{message:"your request is sent.."});
             }
             else{
-                return res.render('error',{message:num});
+                 res.render('error',{message:num});
             }
         }
     });
@@ -325,13 +323,13 @@ router.post('/sendFeedBack', function(req,res) {
     console.log('post...request..');
     var username=req.session.name;
     userCl.sendFeedBack(username,req.body.content,function(error,num){
-        if(error) return handleError(error);
+        if(error)  res.render('error',{message:error});
         else{
             if(num===1){
-                return res.render('ok',{message:"your request is sent.."});
+                 res.render('ok',{message:"your request is sent.."});
             }
             else{
-                return res.render('error',{message:num});
+                 res.render('error',{message:num});
             }
         }
     });
@@ -353,7 +351,7 @@ router.post("/leavemsg",function(req,res){
 router.get('/logout',function(req,res){
     var session = req.session;
     userCl.logout(session);
-    res.render('login');
+    res.redirect('login');
 })
 
 router.get("/aaa",function(req,res){

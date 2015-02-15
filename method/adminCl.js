@@ -13,6 +13,21 @@ var skills=require('./other').skill;
 var projects=require('./other').project;
 var studio=require("./studio").studio;
 var service=require("./service");
+var tools=require("./small");
+
+
+
+function odb(f){
+    mongoose.connect("mongodb://localhost/studio");
+    var db=mongoose.connection;
+
+    db.on('error',console.error.bind(console,"connect error"));
+    db.once('open',function() {
+        f(function(){db.close();});
+
+    });
+}
+
 /**
  * 获取工作室的一些数据..
  * @param sname 工作室名称..
@@ -1095,15 +1110,193 @@ function joingroupString(sname,msgids,staute,callback){
  *
  */
 
-function projectmsgString(sname,msgids,staute,callback){
+function projectsmsg(sname,callback){
+    mongoose.connect("mongodb://localhost/studio");
+    var db=mongoose.connection;
+    console.log("start");
+    db.on('error',console.error.bind(console,"connect error:"));
+    db.once('open',function(){
+        //}).populate('sprojectMessages.uid','uprojectsAsked uprojectsTaking _id','user',null,{multi:true})
+        studio.findOne({sname:sname},{sprojectMessages:1,_id:0}).populate("sprojectMessages.pid","ptitle ptype -_id",'project',null,{multi:true}).exec(function(err,doc){
+            db.close();
+            console.log("end");
+            if(doc!=null){
+                doc=doc.sprojectMessages;
+            }
+            callback(err,doc);
+        });
+    })
+}
+/**
+ * 项目申请处理
+ * @param sname
+ * @param msgids  1 申请的 id信息 单个字符串或 字符串数组
+ * @param status  1: 同意申请    2: 拒绝申请
+ * @param callback
+ */
+function projectmsgDeal(sname,msgids,status,callback){
+    if(status==1||status=="1"){
+        if(typeof(msgids)=='string'){
+            projectmsgStringYes(sname,msgids,callback);
+        }else if(typeof(msgids)=='object'){
+            projectmsgArrayYes(sname,msgids,[],callback);
+        }else{}
+    }
+    else if(status==0||status=="0"){
+        if(typeof(msgids)=='string'){
+            projectmsgStringNo(sname,msgids,callback);
+        }else if(typeof(msgids)=='object'){
+            projectmsgArrayNo(sname,msgids,callback);
+        }else{}
+    }
+}
+/**
+ * 处理单条申请..拒绝..
+ * @param sname
+ * @param msgids
+ * @param callback
+ */
+function projectmsgStringNo(sname,msgids,callback){
     mongoose.connect("mongodb://localhost/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
-        studio.update({sname:sname,"sprojectMessages._id":msgids},{$set:{"joinMessages.$.mstaute":staute}},function(err,num){
+      //$pull:{"joinMessages":{"_id":mid}}
+        msgids=mongoose.Types.ObjectId(msgids);
+        studio.update({sname:sname,"sprojectMessages._id":msgids},{$pull:{"sprojectMessages":{"_id":msgids}}},function(err,num)
+        {
+            db.close();
+            if (err) {
+                callback(err);
+            } else {
+                callback(null);
+            }
+        }
+        );
+    })
+}
 
+/**
+ * 处理单条申请..同意..
+ * @param sname
+ * @param msgids
+ * @param callback
+ */
+function projectmsgStringYes(sname,msgids,callback){
+    mongoose.connect("mongodb://localhost/studio");
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, "connect error:"));
+    db.once('open', function () {
+        //populate('joinMessages.uid','ugroupId _id','user',null,{multi:true})
+        msgids=mongoose.Types.ObjectId(msgids);
+        studio.findOne({"sprojectMessages._id":msgids},{"sprojectMessages.$":1,"_id":0}).populate('sprojectMessages.uid','uprojectsAsked uprojectsTaking _id','user',null,{multi:true}).populate("sprojectMessages.pid",'pmembers _id','project',null,{multi:true}).exec(function(err,doc){
+            if(err){db.close();callback(err);}
+            else if(doc==null){db.close();callback("no doc");}
+            else{
+               data = doc.sprojectMessages[0];
+                user.update({_id:data.uid._id},{$pull:{"uprojectsAsked":data.pid._id}},function(err,num){
+
+                    if(err){db.close();callback(err);}
+                    else if(num!=1){db.close();callback("not update, 未从询问数组删除..");}
+                    else{
+                          user.update({_id:data.uid._id},{$push:{"uprojectsTaking":data.pid._id}},function(err,num) {
+                              if (err) {
+                                  db.close();
+                                  callback(err);
+                              }
+                              else if (num != 1) {
+                                  db.close();
+                                  callback("not update, 未加入参与数组..");
+                              }
+                              else {
+                                  projects.update({_id:data.pid._id},{$push:{pmembers:data.uid._id}},function(err,num){
+                                      if (err) {
+                                          db.close();
+                                          callback(err);
+                                      }
+                                      else if (num != 1) {
+                                          db.close();
+                                          callback("not update,未将成员加入项目成员数组..");
+                                      }
+                                      else {
+                                          studio.update({"sprojectMessages._id":msgids},{$pull:{"sprojectMessages":{"_id":msgids}}},function(err,num){
+                                              db.close();
+                                              if (err) {
+                                                  callback(err);
+                                              }
+                                              else if (num != 1) {
+                                                  callback("not update, 未把工作室的申请消息删除..");
+                                              }
+                                              else{
+                                                  callback(null);
+                                              }
+                                          })}
+                                  })
+                              }
+                          })
+                    }
+                })
+            }
         })
     })
+}
+/**
+ * 处理多条申请..拒绝
+ * @param sname
+ * @param msgids
+ * @param callback
+ */
+function projectmsgArrayNo(sname,msgids,callback){
+    mongoose.connect("mongodb://localhost/studio");
+    var db = mongoose.connection;
+    db.on('error', console.error.bind(console, "connect error:"));
+    db.once('open', function () {
+        var id=mongoose.Types.ObjectId(msgids.pop());
+        var errs=[];
+        studio.update({sname:sname,"sprojectMessages._id":id},{$pull:{"sprojectMessages":{"_id":id}}},function(err,num)
+            {
+                db.close();
+                if(err){
+                    errs.push(err);
+                }
+                if(num!=1){
+                    errs.push("not update");
+                }
+                if(msgids.length>0){
+                    projectmsgArrayNo(sname,msgids,callback);
+                }else{
+
+                    if(errs.length>1){
+                        callback(errs);
+                    }else{
+                        callback(null);
+                    }
+                }
+            }
+        );
+    })
+}
+/**
+ * 处理多条申请..同意..
+ * @param sname
+ * @param msgids
+ * @param errs   传入空数组  [].. 保存错误信息..
+ * @param callback
+ */
+function projectmsgArrayYes(sname,msgids,errs,callback){
+ var id=mongoose.Types.ObjecId(msgids.pop());
+ projectmsgStringYes(sname,id,function(err){
+     if(err){
+         errs.push(err);
+     }
+     if(msgids.length>0){
+         projectmsgArrayYes(sname,msgids,errs,callback);
+     }else{
+         db.close();
+         if(errs.length>0){callback(errs);}
+         else{callback(null);}
+     }
+ })
 }
 //*******************************发布模块函数********************************8
 //*******************这里没有加入登录验证***************************
@@ -1114,58 +1307,52 @@ function projectmsgString(sname,msgids,staute,callback){
  *
  */
 function newsInfo(callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
+   odb(function(close){
+       studio.findOne({},"snews -_id",function(err,docs){
+           var data=docs.snews || null;
+           find_data(err,data,close,callback);
+       });
+   })
 
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
 
-        studio.findOne({},"snews -_id",function(err,docs){
-            db.close();
-            if(err) callback(err,null);
-            else if(docs==null){
-                callback("没有找到任何信息..",null);
-            }else{
 
-                callback(null,docs.snews);
-            }
-        });
-    });
 
 }
 
 
 /**
  * 新闻发布,存入数据库..
- * @param sname
- * @param ntitle
- * @param npublisher
- * @param ncontent
- * @param npic
+ * @param title
+ * @param publisher
+ * @param content
+ * @param pic
  * @param callback
  */
-function newsSendout(sname,ntitle,npublisher,ncontent,npic,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-    console.log(sname);
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-
-        studio.update({sname:sname},{$push:{snews:{ntitle:ntitle,npublisher:npublisher,ncontent:ncontent,npic:npic}}},function(err,num){
-            db.close();
-            if(err) callback(err);
-            else if(num!=1){
-                callback("未成功更新..");
-            }else{
-                callback(null);
-            }
-        });
-
-    });
-
+function addnews(title,publisher,content,pic,callback){
+   odb(function(close){
+       studio.update({},{$push:{snews:{ntitle:title,npublisher:publisher,ncontent:content,npic:pic}}},function(err,num){
+        if(err){close();callback(err,null);}
+        else if(num!=1){close();callback("not update",null)}
+        else{
+            studio.find({},{snews:{$slice:-1}},function(err,doc){find_data(err,doc[0].snews[0]._id||null,close,callback)});
+        }
+       });
+   })
 }
 
+function editnews(cid,title,publisher,content,pic,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({"snews._id":cid},{$set:{"snews.$.ntitle":title,"snews.$.npublisher":publisher,"snews.$.ncontent":content,"snews.$.npic":pic,"snews.$.npubTime":new Date()}},function(err,num){update_deal(err,num,close,callback) });
+    })
+}
+
+function delnews(cid,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({},{$pull:{snews:{_id:cid}}},function(err,num){update_deal(err,num,close,callback) });
+    })
+}
 
 /**
  * 查找所有事件信息..
@@ -1208,7 +1395,6 @@ function eventsSendout(sname,etitle,econtent,epics,epubTime,callback){
 
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
-
         studio.update({sname:sname},{$push:{sevents:{etitle:etitle,econtent:econtent,epics:epics,epubTime:epubTime}}},function(err,num){
             db.close();
             if(err) callback(err);
@@ -1220,9 +1406,34 @@ function eventsSendout(sname,etitle,econtent,epics,epubTime,callback){
         });
 
     });
-
 }
 
+function addevent(title,content,pics,time,callback){
+    odb(function(close){
+        studio.update({},{$push:{sevents:{etitle:title,econtent:content,epics:pics,epubTime:time}}},function(err,num){
+            if(err){close();callback(err,null);}
+            else if(num!=1){close();callback("not update",null)}
+            else{
+                studio.find({},{sevents:{$slice:-1}},function(err,doc){find_data(err,doc[0].sevents[0]._id||null,close,callback)});
+            }
+        })
+    })
+};
+
+function editevent(cid, title,content,pics,time,callback){
+    odb(function(close){
+        console.log(pics);
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({"sevents._id":cid},{$set:{"sevents.$.etitle":title,"sevents.$.econtent":content,"sevents.$.epics":pics,"sevents.$.epubTime":time}},function(err,num){update_deal(err,num,close,callback) });
+    })
+}
+
+function delevent(cid,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({},{$pull:{sevents:{_id:cid}}},function(err,num){update_deal(err,num,close,callback) });
+    })
+}
 
 /**
  * 查找所有成果信息..
@@ -1248,6 +1459,31 @@ function acInfo(callback){
 
 }
 
+function addachievement(title,content,pic,time,callback){
+    odb(function(close){
+        studio.update({},{$push:{"sachievements":{atitle:title,apic:pic,atime:time,acontent:content}}},function(err,num){
+            if(err){close();callback(err,null);}
+            else if(num!=1){close();callback("not update",null);}
+            else{
+                studio.find({},{sachievements:{$slice:-1}},function(err,doc){find_data(err,doc[0].sachievements[0]._id||null,close,callback)});
+            }
+        })
+    })
+}
+
+function editachievement(cid,title,content,pic,time,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({"sachievements._id":cid},{$set:{"sachievements.$.atitle":title,"sachievements.$.apic":pic,"sachievements.$.atime":time,"sachievements.$.acontent":content}},function(err,num){update_deal(err,num,close,callback); })
+    })
+}
+
+function delachievement(cid,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({},{$pull:{"sachievements":{_id:cid}}},function(err,num){update_deal(err,num,close,callback)});
+    })
+}
 /**
  * 成果发布..存入数据库..
  * @param sname
@@ -1264,7 +1500,6 @@ function acSendout(sname,atitle,acontent,apic,atime,callback){
 
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
-
         studio.update({sname:sname},{$push:{sachievements:{atitle:atitle,acontent:acontent,apic:apic,atime:atime}}},function(err,num){
             db.close();
             if(err) callback(err);
@@ -1274,7 +1509,6 @@ function acSendout(sname,atitle,acontent,apic,atime,callback){
                 callback(null);
             }
         });
-
     });
 
 }
@@ -1456,6 +1690,10 @@ function projectSendout(ptitle,pcontent,ppubTime,pstartTime,pfinishTime,ptype,ps
  * 获取团队(工作室基本信息..
  * @param sname
  * @param callback
+ *
+ * 问题: 此处 关于 教师的类型
+ *      1 只用字符串存储姓名
+ *      2 用引用存储一个用户的id
  */
 function teamInfo(sname,callback){
     mongoose.connect("mongodb://localhost/studio");
@@ -1463,12 +1701,15 @@ function teamInfo(sname,callback){
 
     db.on('error',console.error.bind(console,"connect error: "));
     db.once('open',function(){
-        studio.find({sname:sname}).populate("sleader steacher").select("sname scontent sleader steacher stelephone semail saddress sculture").exec(function(err,doc){
+        //解引用,  教师采用引用存储..
+       // studio.find({sname:sname}).populate("sleader steacher").select("sname scontent sleader   steacher stelephone semail saddress sculture").exec(function(err,doc){
+        studio.find({sname:sname}).select("sname scontent leader teacher stelephone semail saddress sculture").exec(function(err,doc){
+
             db.close();
             console.log(doc);
             if(err) callback(err,null);
-            else if(doc ==null) callback("不存在..数据",null);
-            else callback(null,doc);
+            else if(doc ==null) callback("no data",null);
+            else callback(null,doc[0]);
         });
     });
 }
@@ -1484,18 +1725,84 @@ function teamInfo(sname,callback){
  * @param saddress
  * @param callback
  */
-function teamInfoEdit(sname,scontent,steacher,sleader,stelephone,semail,saddress,callback){
+function teamInfoEdit(sname,scontent,teacher,leader,stelephone,semail,saddress,callback){
     mongoose.connect("mongodb://localhost/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
     db.once('open',function(){
-        studio.update({sname:sname},{$set:{sname:sname,scontent:scontent,steacher:steacher,sleader:sleader,stelephone:stelephone,semail:semail,saddress:saddress}},function(err,num){
+        studio.update({sname:sname},{$set:{sname:sname,scontent:scontent,teacher:teacher,leader:leader,stelephone:stelephone,semail:semail,saddress:saddress,uptime:new Date()}},function(err,num){
+            db.close();
             if(err) callback(err);
             else if(num!=1) callback("未更新成功..");
             else callback(null);
         })
     })
+}
+
+
+/**
+ * 添加文化..
+ * @param title
+ * @param content
+ * @param callback
+ */
+function addculture(title,content,callback){
+    odb(function(close)
+    {
+        studio.update({},{$push:{sculture:{cname:title,ccontent:content,ctime:new Date()}}},function(err,num){update_deal(err,num,close,callback)});
+    });
+}
+/**
+ * 编辑文化.
+ * @param cid.
+ * @param title
+ * @param content
+ * @param callback
+ */
+function editculture(cid,title,content,callback){
+    odb(function(close){
+        cid=mongoose.Types.ObjectId(cid);
+        studio.update({"sculture._id":cid},{$set:{"sculture.$.cname":title,"sculture.$.ccontent":content,"sculture.$.ctime":new Date()}},function(err,num){
+            update_deal(err,num,close,callback);
+        });
+    });
+}
+/**
+ * 删除文化
+ * @param cid
+ * @param callback
+ */
+function delculture(cid,callback){
+    odb(function(close){
+        cid=mongoose.Types.ObjectId(cid);
+        studio.update({"sculture._id":cid},{$pull:{sculture:{_id:cid}}},function(err,num){
+            update_deal(err,num,close,callback);
+        })
+    })
+}
+
+//更新后直接返回..
+function update_deal(err,num,close,callback){
+    close();
+    if(err){
+        callback(err);
+    }
+    else if(num!=1){
+        callback("not update..");
+    }else{
+        callback(null);
+    }
+}
+
+//返回数据
+function find_data(err,data,close,callback){
+    close();
+    if(err){
+        callback(err,null);
+    }else{
+        callback(null,data);
+    }
 }
 /**
  * 组织信息发布的信息。。
@@ -1513,13 +1820,15 @@ function teamInfoSendout(sname,callback){
             if(err){
                 callback(err,null);
             }else{
-                callback(null,docs);
+                 console.log(docs);
+                callback(null,docs[0].soMessages);
             }
         });
     });
 }
+
 /**
- * 组织发布信息  新增。。
+ * 组织发布信息  新增。。 not use..
  * @param sname
  * @param group
  * @param leader
@@ -1528,6 +1837,7 @@ function teamInfoSendout(sname,callback){
  * @param pic
  * @param callback
  */
+/*
 function teamInfoSendoutNew(sname,group,leader,date,content,pic,callback){
     mongoose.connect("mongodb://localhost/studio");
     var db=mongoose.connection;
@@ -1546,9 +1856,86 @@ function teamInfoSendoutNew(sname,group,leader,date,content,pic,callback){
     });
 }
 
+*/
+/**
+ * 组织发布信息  新增。。
+ * @param group
+ * @param leader
+ * @param content
+ * @param pic
+ * @param date
+ * @param callback
+ */
+function addmsg(group,leader,content,pic,date,callback){
+    odb(function(close){
+        studio.update({},{$push:{soMessages:{ogroup:group,oleader:leader,ocontent:content,opic:pic}}},function(err,num){
+            if(err){close();callback(err);}
+            else if(num!=1){close();callback("not update..");}
+            else{
+                studio.find({},{soMessages:{$slice:-1}},function(err,doc){
+                    console.log(err);
+                    find_data(err,doc[0].soMessages[0]._id,close,callback);
+                })
+            }
+        });
+    })
+}
+
+function addmsgt(group,leader,content,pic,date,callback){
+    odb(function(close){
+        studio.update({},{$push:{soMessages:{ogroup:group,oleader:leader,ocontent:content,opic:pic}}},function(err,num){
+            console.log(err+ "   " + num);
+            //callback(err);
+          //  update_deal(err,num,close,callback)
+            if(err){close();callback(err);}
+            else if(num!=1){close();callback("not update..");}
+            else{
+                studio.find({},{soMessages:{$slice:-1}},function(err,doc){
+                    console.log(err+ "  "+ doc );
+                    close();
+                    callback();
+                })
+            }
+        });
+
+    })
+}
+
 
 /**
- * 组织发布信息  修改。。
+ * 组织发布信息  编辑。。
+ * @param cid
+ * @param group
+ * @param leader
+ * @param content
+ * @param pic
+ * @param date
+ * @param callback
+ */
+function editmsg(cid,group,leader,content,pic,date,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({"soMessages._id":cid},{$set:{"soMessages.$.ogroup":group,"soMessages.$.oleader":leader,"soMessages.$.uptime":date,"soMessages.$.ocontent":content,"soMessages.$.opic":pic}},function(err,num){update_deal(err,num,close,callback)});
+    })
+}
+/**
+ * 组织发布信息  删除。。
+ * @param cid
+ * @param callback
+ */
+function delmsg(cid,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        console.log(cid);
+        studio.update({},{$pull:{soMessages:{_id:cid}}},function(err,num){update_deal(err,num,close,callback)});
+    })
+}
+
+
+
+
+/**
+ * 组织发布信息  修改。。 not use any more..
  * @param sname
  * @id   id
  * @param group
@@ -1558,6 +1945,7 @@ function teamInfoSendoutNew(sname,group,leader,date,content,pic,callback){
  * @param pic
  * @param callback
  */
+/*
 function teamInfoSendoutUpdate(sname,id,group,leader,date,content,pic,callback){
     mongoose.connect("mongodb://localhost/studio");
     var db=mongoose.connection;
@@ -1575,6 +1963,7 @@ function teamInfoSendoutUpdate(sname,id,group,leader,date,content,pic,callback){
         })
     });
 }
+*/
 /**
  * 工作室 新闻，事件，成就，榜样 的数目统计。。
  * @param sname
@@ -1596,8 +1985,13 @@ function teamData(sname,callback){
                 data.eventsNum=doc.sevents.length;
                 data.acNum=doc.sachievements.length;
                 data.examplesNum=doc.sexamples.length;
-                var trans=["未开始招新","开始招新","网站维护中"];
-                data.staute=trans[doc.sstaute];
+                var trans=["营业中","招新中","维护中"];
+                if(doc.sstaute>=0&&doc.sstaute<3){
+                    data.status=trans[doc.sstaute];
+                }
+                else{
+                    data.status="出错啦..";
+                }
                 callback(null,data)}
         })
     });
@@ -1938,7 +2332,6 @@ exports.adminTip=adminTip;
 exports.adminMsg=adminMsg;
 exports.adminMsgOk=adminMsgOk;
 exports.adminMsgOki=adminMsgOki;
-exports.newsSendout=newsSendout;
 exports.newsInfo=newsInfo;
 exports.eventsSendout=eventsSendout;
 exports.eventsInfo=eventsInfo;
@@ -1953,8 +2346,6 @@ exports.projectTypeInfo=projectTypeInfo;
 exports.teamInfo=teamInfo;
 exports.teamInfoEdit=teamInfoEdit;
 exports.teamInfoSendout=teamInfoSendout;
-exports.teamInfoSendoutNew=teamInfoSendoutNew;
-exports.teamInfoSendoutUpdate=teamInfoSendoutUpdate;
 exports.teamData=teamData;
 exports.addUser=addUser;
 exports.editUser=editUser;
@@ -1975,3 +2366,29 @@ exports.feedbackmsgDelC=feedbackmsgDelC;
 exports.feedbackmsgDel=feedbackmsgDel;
 exports.feedbackmsgC=feedbackmsgC;
 exports.joingroupmsg=joingroupmsg;
+exports.projectmsgStringYes=projectmsgStringYes;
+exports.projectmsgDeal=projectmsgDeal;
+exports.projectsmsg=projectsmsg;
+exports.addculture=addculture;
+exports.editculture=editculture;
+exports.delculture=delculture;
+
+//组织信息发布
+exports.addmsg                = addmsg;
+exports.editmsg               = editmsg;
+exports.delmsg                = delmsg;
+
+//新闻发布
+exports.addnews               = addnews;
+exports.editnews              = editnews;
+exports.delnews               = delnews;
+
+//大事件
+exports.addevent              = addevent;
+exports.editevent             = editevent;
+exports.delevent              = delevent;
+
+//成果展示
+exports.addachievement        = addachievement;
+exports.editachievement       = editachievement;
+exports.delachievement        = delachievement;

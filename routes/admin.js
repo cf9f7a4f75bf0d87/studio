@@ -10,6 +10,10 @@ var adminCl=require('../method/adminCl');
 var userCl=require('../method/userCl');
 var async=require('async');
 var mongoose=require('mongoose');
+var tools=require('../method/small');
+
+
+
 /* GET home page. */
 router.get('/', function(req, res) {
     //var sname=req.session.sname;
@@ -388,9 +392,9 @@ router.post('/tip/feedbackCDel',function(req,res){
 //});
 
 /**
- * 成员反馈处理界面..
+ * 成员反馈处理界面..过期
  */
-
+/*
 router.post('/tip/feedback',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
@@ -484,20 +488,7 @@ router.post('/tip/feedback',function(req,res){
 
     });
 });
-
-/**
- *
- */
-router.post("/tip/feedbackok",function(req,res){
-    var msg=req.body.msg;
-
-    adminCl.feedbackmsg(sname,msg,1,function(err){
-        if(err){res.render('error',{message:err})}
-        else{
-            res.render('ok',{message:"success"});
-        }
-    })
-})
+*/
 
 /**
  * 加入创新组信息处理界面
@@ -508,12 +499,15 @@ router.get('/tip/joinMsg',function(req,res){
     adminCl.joingroupmsg(sname,function(err,data){
         if(err) {console.log(err);res.render('error',{message:err});}
         else{
+            console.log(data);
+            console.log(typeof(data[0]._id));
             res.render('ajoinmsg',{data:data});
         }
     })
 });
 
 //旧版本,处理两种情况..
+/*
 router.post('/tip/joinMsg',function(req,res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";
@@ -536,7 +530,7 @@ router.post('/tip/joinMsg',function(req,res) {
             })
         }
     })
-});
+});*/
 
 //同意加入 - ajax 接口
 router.post('/tip/joinMsgOkJ',function(req,res) {
@@ -678,11 +672,11 @@ router.post('/tip/joinMsgNoJ',function(req,res) {
 router.get('/tip/projectMsg',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
-    adminCl.adminMsg(sname,"sprojectMessages",0,function(err,data){
-        if(err) return console.log(err);
+    adminCl.projectsmsg(sname,function(err,data){
+        if(err)  {console.log(err);res.render('error',{message:err})}
         else{
+            console.log(data);
             res.render('apromsg',{data:data});
-
         }
     })
 });
@@ -695,38 +689,51 @@ router.get('/tip/projectMsg',function(req,res){
 router.post('/tip/projectMsgOkJ',function(req,res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";
+    var msg=null;
     if(typeof(req.body.msg)=='undefined'){
-        var msg=req.body["msg[]"];
+         msg=req.body["msg[]"];
     }else{
-        var msg = req.body.msg;
+         msg = req.body.msg;
+    }
+    if(msg==null || typeof(msg)=='undefined'|| msg==""){
+        console.log("msg 为空值 .. ");
+        res.json({success:"error: msg is null"});
+    }else{
+        console.log(msg+"*****");
+        adminCl.projectmsgDeal(sname,msg,1,function(err){
+            if(err){
+                console.log(err);
+                res.json({success:0});
+            }else{
+                res.json({success:1});
+            }
+        })
     }
 
-    adminCl.joingroupEx(sname,msg,1,function(err){
-        if(err){
-            console.log(err);
-            res.json({success:0});
-        }else{
-            res.json({success:1});
-        }
-    })
 });
 //不同意加入 - ajax 接口
-router.post('/tip/projectMsgJ',function(req,res) {
+router.post('/tip/projectMsgNoJ',function(req,res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";
+    var msg=null;
     if(typeof(req.body.msg)=='undefined'){
-        var msg=req.body["msg[]"];
+         msg=req.body["msg[]"];
     }else{
-        var msg = req.body.msg;
+         msg = req.body.msg;
     }
-    adminCl.joingroupEx(sname,msg,2,function(err){
+    if(msg==null || typeof(msg)=='undefined'|| msg==""){
+        console.log("msg 为空值 .. ");
+        res.json({success:"error: msg is null"});
+    }else{
+        console.log(msg+"*****");
+    adminCl.projectmsgDeal(sname,msg,0,function(err){
         if(err){
             console.log(err);
             res.json({success:0});
         }else{
             res.json({success:1});
         }
-    })
+    })}
 });
 
 
@@ -735,103 +742,103 @@ router.post('/tip/projectMsgJ',function(req,res) {
 /**
  * 项目申请处理界面..  -  old
  *
- */
-router.get('/tip/projectMsg',function(req,res) {
-//var sname=req.session.sname;
-    var sname = "RoseOffice";
+// */
+//router.get('/tip/projectMsg',function(req,res) {
+////var sname=req.session.sname;
+//    var sname = "RoseOffice";
+//
+//    var msg=req.body.msg;
+//    var msgno=req.body.msgno;
+//    var i=0;
+//
+//    mongoose.connect("mongodb://localhost/studio");
+//    var db=mongoose.connection;
+//    console.log(sname);
+//
+//    db.on('error',console.error.bind(console,"connect error:"));
+//    db.once('open',function() {
+//        if (typeof(msg) == 'object') {
+//            async.series([
+//                function (callback) {
+//                    msg.forEach(function (val) {
+//                        adminCl.adminMsgOk(sname, "sprojectMessages", val, 1, function (err) {
+//                            console.log('回调函数..');
+//                            if (err) {
+//                                callback(err);
+//                            } else {
+//                                callback(null);
+//                            }
+//                        });
+//                    });
+//                }
+//            ], function (err) {
+//                i++;
+//                if (err) console.log(err);
+//                if (i == msg.length) {
+//                    db.close();
+//                    res.redirect('/admin/tip/joinMsg');
+//                }
+//            });
+//        } else if (typeof(msg) == 'string') {
+//            adminCl.adminMsgOk(sname, "sprojectMessages", msg, 1, function (err) {
+//                if (err) {
+//                    console.log(err);
+//                    db.close();
+//                    res.render("error", {message: err});
+//                } else {
+//                    db.close();
+//                    res.render('ok', {message: "审核成功.."});
+//                }
+//
+//            });
+//        }
+//        //拒绝消息的处理..
+//        else if (typeof(msgno) == 'object') {
+//            async.series([
+//                function (callback) {
+//                    msgno.forEach(function (val) {
+//                        adminCl.adminMsgOk(sname, "sprojectMessages", val, 2, function (err) {
+//                            console.log("调用一次处理函数..");
+//                            //adminCl.adminmsgnoOki(sname,val,1,function(){
+//                            console.log('回调函数..');
+//                            if (err) {
+//                                callback(err);
+//                            } else {
+//                                callback(null);
+//                            }
+//                        });
+//                    });
+//                }
+//
+//            ], function (err) {
+//                i++;
+//                if (err) console.log(err);
+//                if (i == msgno.length) {
+//                    db.close();
+//                    res.redirect('/admin/tip/joinMsg');
+//                }
+//            });
+//        } else if (typeof(msgno) == 'string') {
+//            adminCl.adminMsgOk(sname, "sprojectMessages", msgno, 2, function (err) {
+//                if (err) {
+//                    console.log(err);
+//                    db.close();
+//                    res.render("error", {message: err});
+//                } else {
+//                    db.close();
+//                    res.render('ok', {message: "审核成功.."});
+//                }
+//
+//            });
+//        } else {
+//            db.close();
+//            res.render('error', {message: "未选择任何项.."});
+//        }
+//
+//    });
+//
 
-    var msg=req.body.msg;
-    var msgno=req.body.msgno;
-    var i=0;
-
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    console.log(sname);
-
-    db.on('error',console.error.bind(console,"connect error:"));
-    db.once('open',function() {
-        if (typeof(msg) == 'object') {
-            async.series([
-                function (callback) {
-                    msg.forEach(function (val) {
-                        adminCl.adminMsgOk(sname, "sprojectMessages", val, 1, function (err) {
-                            console.log('回调函数..');
-                            if (err) {
-                                callback(err);
-                            } else {
-                                callback(null);
-                            }
-                        });
-                    });
-                }
-            ], function (err) {
-                i++;
-                if (err) console.log(err);
-                if (i == msg.length) {
-                    db.close();
-                    res.redirect('/admin/tip/joinMsg');
-                }
-            });
-        } else if (typeof(msg) == 'string') {
-            adminCl.adminMsgOk(sname, "sprojectMessages", msg, 1, function (err) {
-                if (err) {
-                    console.log(err);
-                    db.close();
-                    res.render("error", {message: err});
-                } else {
-                    db.close();
-                    res.render('ok', {message: "审核成功.."});
-                }
-
-            });
-        }
-        //拒绝消息的处理..
-        else if (typeof(msgno) == 'object') {
-            async.series([
-                function (callback) {
-                    msgno.forEach(function (val) {
-                        adminCl.adminMsgOk(sname, "sprojectMessages", val, 2, function (err) {
-                            console.log("调用一次处理函数..");
-                            //adminCl.adminmsgnoOki(sname,val,1,function(){
-                            console.log('回调函数..');
-                            if (err) {
-                                callback(err);
-                            } else {
-                                callback(null);
-                            }
-                        });
-                    });
-                }
-
-            ], function (err) {
-                i++;
-                if (err) console.log(err);
-                if (i == msgno.length) {
-                    db.close();
-                    res.redirect('/admin/tip/joinMsg');
-                }
-            });
-        } else if (typeof(msgno) == 'string') {
-            adminCl.adminMsgOk(sname, "sprojectMessages", msgno, 2, function (err) {
-                if (err) {
-                    console.log(err);
-                    db.close();
-                    res.render("error", {message: err});
-                } else {
-                    db.close();
-                    res.render('ok', {message: "审核成功.."});
-                }
-
-            });
-        } else {
-            db.close();
-            res.render('error', {message: "未选择任何项.."});
-        }
-
-    });
-
-
-});
+//});
 //**************************发布模块********************************88
 
 /**
@@ -857,14 +864,57 @@ router.get('/sendout/',function(req,res){
 router.get('/sendout/teaminfo',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
-    adminCl.teamInfo(sname,function(err,docs){
+    adminCl.teamInfo(sname,function(err,data){
         if(err){
             res.render('error',{message:err});
         }else{
-            res.render('ateaminfo',{docs:docs});
+            res.render('ateaminfo',{data:data});
         }
     });
 
+});
+/**
+ * 编辑工作室基本信息..
+ */
+router.post('/sendout/infoEdit',function(req,res){
+    if(req.body.sname==null||req.body.sname==""||req.body.semail==null||req.body.semail==""||req.body.scontent==null||req.body.scontent==""||req.body.teacher==null||req.body.teacher==""||req.body.leader==null||req.body.leader==""||req.body.stel==null||req.body.stel==""||req.body.saddress==null||req.body.saddress==""){
+        console.log("参数不完整..");
+        res.json({"success":0})
+    }else{
+        adminCl.teamInfoEdit(req.body.sname,req.body.scontent,req.body.teacher,req.body.leader,req.body.stel,req.body.semail,req.body.saddress,function(err){
+            if(err){
+                console.error(err);
+                res.json({"success":"0"});
+            }else{
+                res.json({"success":"1"});
+            }
+        })
+    }
+})
+/**
+ * 编辑团队文化
+ */
+router.post('/sendout/editCulture',function(req,res){
+   adminCl.editculture(req.body.cid,req.body.title,req.body.content,function(err){
+       if(err){
+           console.error(err);
+           res.json({"success":"0"});
+       }else{
+           res.json({"success":"1"});
+       }
+   });
+});
+/**
+ * 添加团队文化..
+ */
+router.post('/sendout/addCulture',function(req,res){
+   adminCl.addculture(req.body.title,req.body.content,function(err){tools.json_reply(err,res)});
+});
+/**
+ * 删除团队文化
+ */
+router.post('/sendout/delCulture',function(req,res){
+    adminCl.delculture(req.body.cid,function(err){tools.json_reply(err,res)});
 });
 
 /**
@@ -875,11 +925,12 @@ router.get('/sendout/msgSendout',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
 
-    adminCl.teamInfoSendout(sname,function(err,docs){
+    adminCl.teamInfoSendout(sname,function(err,data){
         if(err){
             res.render('error',{message:err});
         }else{
-            res.render('ateaminfos',{docs:docs});
+                    console.log(data);
+            res.render('ateaminfos',{data:data});
         }
     });
 
@@ -889,101 +940,109 @@ router.get('/sendout/msgSendout',function(req,res){
  * 组织信息发布..
  * 后台更新
  */
-router.post('/sendout/msgSendout',function(req,res){
-    //var sname=req.session.sname;
-    var sname="RoseOffice";
-    var group = req.body.group;
-    var leader =req.body.leader;
-    var content = req.body.content;
-    var pic = req.body.pic;
-    var date = req.body.date;
-    adminCl.teamInfoSendoutNew(sname,group,leader,content,pic,date,function(err){
-        if(err){
-            res.render('error',{message:err});
-        }else{
-            res.render('ok',{message:"ok"});
-        }
-    });
+router.post('/sendout/addMsg',function(req,res){
 
+    var group   = req.body.group;
+    var leader  = req.body.leader;
+    var content = req.body.content;
+    var pic     = req.body.pic || "..";
+    var date    = req.body.date;
+
+    adminCl.addmsg(group,leader,content,pic,date,function(err,data){tools.json_reply(err,res,data);});
+});
+
+/**
+ * 组织信息发布..
+ * 修改
+ */
+router.post('/sendout/editMsg',function(req,res){
+
+    var group   = req.body.group;
+    var leader  = req.body.leader;
+    var content = req.body.content;
+    var pic     = req.body.pic || "..";
+    var date    = req.body.date;
+    var cid     = req.body.cid;
+
+    adminCl.editmsg(cid,group,leader,content,pic,date,function(err){tools.json_reply(err,res);});
+});
+
+/**
+ * 组织信息发布..
+ * 删除
+ */
+router.post('/sendout/delMsg',function(req,res){
+    var cid     = req.body.cid;
+    adminCl.delmsg(cid,function(err){tools.json_reply(err,res);});
 });
 /**
  * 发布新闻...
  */
-router.get('/sendout/newsSendout',function(req,res){
+router.get('/sendout/news',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
-    adminCl.newsInfo(function(err,docs){
-        if(err){
-            res.render('error',{message:err});
-        }else{
-            res.render('anewsSendout',{docs:docs});
-        }
-    });
-
-
+    adminCl.newsInfo(function(err,data){tools.render_deal(err,res,data,"anews") });
 });
-router.post('/sendout/newsSendout',function(req,res) {
-    //var sname=req.session.sname;
-    var sname = "RoseOffice";
 
-    var ntitle = req.body.ntitle;
-    var ncontent = req.body.ncontent;
-    var npublisher = req.body.npublisher;
-    var npic = req.body.npic;
+router.post("/sendout/addNews",function(req,res){
+    adminCl.addnews(req.body.title,req.body.publisher,req.body.content,req.body.pic||"",function(err,data){tools.json_reply(err,res,data);})
+})
 
-    adminCl.newsSendout(sname,ntitle,npublisher,ncontent,npic,function(err){
-        if(err){res.render('error',{message:err})}
-        else{
-            res.render('ok',{message:"上传成功.."});
-        }
-    });
-});
+router.post("/sendout/editNews",function(req,res){
+    adminCl.editnews(req.body.cid,req.body.title,req.body.publisher,req.body.content,req.body.pic||"",function(err){tools.json_reply(err,res);})
+})
+
+router.post("/sendout/delNews",function(req,res){
+    adminCl.delnews(req.body.cid,function(err){tools.json_reply(err,res);})
+})
+
 
 /**
  * 大事件发布
  */
-router.get('/sendout/eventSendout',function(req,res){
+router.get('/sendout/events',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
-    adminCl.eventsInfo(function(err,docs){
+    adminCl.eventsInfo(function(err,data){
         if(err){
             res.render('error',{message:err});
         }else{
-            res.render('aeventSendout',{docs:docs});
+            res.render('aevent',{data:data});
         }
     });
 });
-router.post('/sendout/eventSendout',function(req,res) {
-    //var sname=req.session.sname;
-    var sname = "RoseOffice";
 
-    var etitle = req.body.etitle;
-    var econtent = req.body.econtent;
-    var epics= req.body.epics;
-    var epubTime = req.body.epubTime;
-
-    adminCl.eventsSendout(sname,etitle,econtent,epics,epubTime,function(err){
-        if(err){res.render('error',{message:err})}
-        else{
-            res.render('ok',{message:"上传成功.."});
-        }
-    });
+router.post("/sendout/addEvent",function(req,res){
+    adminCl.addevent(req.body.title,req.body.content,req.body.pics||req.body["pics[]"],req.body.time,function(err,data){tools.json_reply(err,res,data);})
 });
+
+router.post("/sendout/editEvent",function(req,res){
+    adminCl.editevent(req.body.cid,req.body.title,req.body.content,req.body.pics||req.body["pics[]"],req.body.time,function(err){tools.json_reply(err,res)})
+});
+
+router.post("/sendout/delEvent",function(req,res){
+    adminCl.delevent(req.body.cid,function(err){tools.json_reply(err,res)})
+});
+
+
 
 //成果的发布..
-router.get('/sendout/acSendout',function(req,res){
-    //var sname=req.session.sname;
-    var sname="RoseOffice";
-    adminCl.acInfo(function(err,docs){
-        if(err){
-            res.render('error',{message:err});
-        }else{
-            res.render('aacSendout',{docs:docs});
-        }
-    });
-
-
+router.get('/sendout/achievements',function(req,res){
+    adminCl.acInfo(function(err,data){tools.render_deal(err,res,data,"aachievements"); });
 });
+
+router.post("/sendout/addAchievement",function(req,res){
+    adminCl.addachievement(req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
+})
+
+router.post("/sendout/editAchievement",function(req,res){
+    adminCl.editachievement(req.body.cid,req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
+})
+
+router.post("/sendout/delAchievement",function(req,res){
+    adminCl.delachievement(req.body.cid,function(err,data){tools.json_reply(err,res);});
+})
+
 router.post('/sendout/acSendout',function(req,res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";
@@ -1002,7 +1061,7 @@ router.post('/sendout/acSendout',function(req,res) {
 });
 
 //榜样的发布..
-router.get('/sendout/exampleSendout',function(req,res){
+router.get('/sendout/examples',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
     adminCl.exampleInfo(function(err,docs){
@@ -1031,7 +1090,7 @@ router.post('/sendout/exampleSendout',function(req,res) {
 });
 
 //项目的发布..
-router.get('/sendout/projectSendout',function(req,res){
+router.get('/sendout/projects',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
     adminCl.projectInfo(function(err,docs){

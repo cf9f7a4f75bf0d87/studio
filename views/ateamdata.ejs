@@ -1,11 +1,269 @@
-<%- include bheader.ejs%>
 
-<div class="container">
-    <%for(var v in data){%>
-    <div class="row"><div class="col-md-12">
-            <p><%=v%></p><strong><%=data[v]%></strong>
-        </div></div>
-   <% }%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>发布</title>
+
+
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/b1.css">
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="/javascripts/link_fabu.js"></script>
+
+
+</head>
+
+<body>
+
+<%- include top %>
+<%- include header %>
+<%- include nav%>
+<%- include leftnav%>
+
+
+<div class="contentnav">
+      <span>
+        <a href="/">螺丝工作室后台管理 ></a>
+        <a href="/b_1fabu">发布</a>
+        <a href="#"></a>
+      </span>
+</div>
+
+<div id="a">
+    <p id="p1"> 数据统计</p>
+    <ul id="ul1">
+        <li >大事记总数：<%=data.eventsNum%>条</li>
+        <li>成果总数：<%=data.acNum%>条</li>
+        <li>榜样总数：<%=data.examplesNum%>条</li>
+        <li>新闻总数：<%=data.newsNum%>条</li>
+        <li>状态:<%=data.status%>
+        </li>
+    </ul>
+</div>
+
+<div id="b">
+<p id="p2">浏览排行榜
+    <select class="op">
+        <option class="op" value="0">工作室新闻</option>
+        <option class="op" value="1">大事件 </option>
+        <option class="op" value="2">成果展示</option>
+    </select>
+</p>
+<div id="div1">
+    <table class="table">
+        <tr>
+            <td>排名</td>
+            <td>标题</td>
+            <td>次数</td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+
+    </table>
+
+
+    <table class="page">
+
+        <tr >
+            <td >上一页</td>
+            <td >下一页</td>
+        </tr>
+    </table>
+</div>
+
+
+
+
+<div id="div2">
+    <table class="table">
+        <tr>
+            <td>排名</td>
+            <td>标题</td>
+            <td>次数</td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <table class="page">
+
+            <tr >
+                <td >上一页</td>
+                <td >下一页</td>
+            </tr>
+        </table>
+
+    </table>
+
 
 </div>
-<%- include bfooter.ejs%>
+<div id="div3">
+    <table id="t2" class="table">
+        <tr>
+            <td>排名</td>
+            <td>标题</td>
+            <td>次数</td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+        <table class="page">
+
+            <tr >
+                <td >上一页</td>
+                <td >下一页</td>
+            </tr>
+        </table>
+    </table>
+
+</div>
+
+</div>
+
+</body>
+
+
+</html>

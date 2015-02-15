@@ -1,18 +1,211 @@
-<%-include bheader %>
-<form role="form" class="form" action="" method="post">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
-    <% for(var i in data){%>
-    <div class="form-group">
-        <label class="control-label" for="msg"><%=i%>==><%=data[i]%></label>
-        <input type="checkbox" class="form-control" value=<%=data[i].smid%> id="msg" name="msg">同意
-        <input type="checkbox" class="form-control" value=<%=data[i].smid%> id="msgno" name="msgno">不同意
+
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/aleftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/a_5xiangmushenqing.css">
+
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script type="text/javascript" src="/bootstrap/js/jquery-2.1.1.js"></script>
+
+    <script type="text/javascript" src="/javascripts/link_xiangmushenqing.js"></script>
+
+</head>
+
+<body>
+<%- include top %>
+<%- include header %>
+<div id="nav">
+    <ul>
+        <li><a href="/admin/">后台管理</a></li>
+        <li><a href="/admin/tip">通知</a></li>
+        <li><a href="projectMsg">项目申请</a></li>
+    </ul>
+</div>
+
+<%- include aleftnav%>
+
+
+<div class="contentnav">
+      <span>
+        <a href="/">螺丝工作室后台管理 ></a>
+        <a href="/a_1tongzhi">通知 ></a>
+        <a href="/a_4jiarushenqing">加入申请</a>
+      </span>
+</div>
+
+<div id="a">
+    <div id="b">
+        <h >项目申请列表</h>
+        <select class="op">
+            <option class="op" value="0">科研项目</option>
+            <option class="op" value="1">外包项目</option>
+            <option class="op" value="2">geek创意</option>
+            <option class="op" value="3">校园作品</option>
+        </select>
+
+        <div id="text0">
+
+            <input type="image" value="拒绝" onclick="return false;" class="j1">
+            <input type="image" value="同意" onclick="return false;" class="t1">
+
+            <%
+         
+            if(typeof(data)=='undefined'||data==null){
+              %><div class="div1"><span>什么都没有</span></div> <%
+            }
+            else{
+                for( var i=0;i<data.length;i++){
+                    if(data[i].pid.ptype==0){
+                        %>
+            <div class ="div1">
+                <span>[<%=data[i].mtime%>]<%=data[i].uname%>想加入项目(<%=data[i].pid.ptitle%>： </span>
+                <form action="" method="post">
+                <input type="hidden" value="<%=data[i]._id%>" name="msg">
+                <input type="checkbox" class="checkbox1" name="msgs"  value="<%=data[i]._id%>">
+                <input type="image" class="shanchu" onclick="return false;" src="/images/u53.png"  value="0">
+                <input type="image" class="queren" onclick="return false;" src="/images/dui.png"  value="1">
+                </form>
+                </br>
+                      <p><%=data[i].mcontent%></p>
+            </div>
+            <%
+                    }
+                            }
+                }
+            %>
+
+
+            <div class="block" >
+                <p style="font-size:20px; text-align:center;">加载更多</p>
+            </div>
+        </div>
+
+        <div id="text1">
+            <input type="image" value="拒绝" onclick="return false;" class="j2">
+            <input type="image" value="同意" onclick="return false;" class="t2">
+
+
+            <%
+         
+                    if(typeof(data)=='undefined'||data==null){
+              %><div class="div1"><span>什么都没有</span></div> <%
+            }
+            else{
+                    for( var i=0;i<data.length;i++){
+                    if(data[i].pid.ptype==1){
+            %>
+            <div class ="div1">
+                <span>[<%=data[i].mtime%>]<%=data[i].uname%>想加入项目(<%=data[i].pid.ptitle%>： </span>
+                <form action="" method="post">
+                    <input type="hidden" value="<%=data[i]._id%>" name="msg">
+                    <input type="checkbox" class="checkbox1" name="msgs"  value="<%=data[i]._id%>">
+                    <input type="image" class="shanchu" onclick="return false;" src="/images/u53.png"  value="0">
+                    <input type="image" class="queren" onclick="return false;" src="/images/dui.png"  value="1">
+                </form>
+                </br>
+                <p><%=data[i].mcontent%></p>
+            </div>
+            <%
+            }
+            }
+            }
+            %>
+
+
+            <div class="block" >
+                <p style="font-size:20px; text-align:center;">加载更多</p>
+            </div>
+
+
+        </div>
+
+        <div id="text2">
+
+            <input type="image" value="拒绝" onclick="return false;" class="j3">
+            <input type="image" value="同意" onclick="return false;" class="t3">
+
+            <%
+         
+              if(typeof(data)=='undefined'||data==null){
+                  %><div class="div1"><span>什么都没有</span></div> <%
+            }
+            else{
+                    for( var i=0;i<data.length;i++){
+                    if(data[i].pid.ptype==2){
+            %>
+            <div class ="div1">
+                <span>[<%=data[i].mtime%>]<%=data[i].uname%>想加入项目(<%=data[i].pid.ptitle%>： </span>
+                <form action="" method="post">
+                    <input type="hidden" value="<%=data[i]._id%>" name="msg">
+                    <input type="checkbox" class="checkbox1" name="msgs"  value="<%=data[i]._id%>">
+                    <input type="image" class="shanchu" onclick="return false;" src="/images/u53.png"  value="0">
+                    <input type="image" class="queren" onclick="return false;" src="/images/dui.png"  value="1">
+                </form>
+                </br>
+                <p><%=data[i].mcontent%></p>
+            </div>
+            <%
+            }
+            }
+            }
+            %>
+
+
+
+
+
+            <div class="block" >
+                <p style="font-size:20px; text-align:center;">加载更多</p>
+            </div>
+
+        </div>
+
+        <div id="text3">
+
+            <input type="image" value="拒绝" onclick="return false;" class="j4">
+            <input type="image" value="同意" onclick="return false;" class="t4">
+
+
+            <%
+         
+                    if(typeof(data)=='undefined'||data==null){
+              %><div class="div1"><span>什么都没有</span></div> <%
+            }
+            else{
+                    for( var i=0;i<data.length;i++){
+                    if(data[i].pid.ptype==3){
+            %>
+            <div class ="div1">
+                <span>[<%=data[i].mtime%>]<%=data[i].uname%>想加入项目(<%=data[i].pid.ptitle%>)： </span>
+                <form action="" method="post">
+                    <input type="hidden"  value='<%=data[i]._id%>'  name="msg" >
+                    <input type="checkbox"  value='<%=data[i]._id%>'  class="checkbox1" name="msgs" >
+                    <input type="image" class="shanchu" onclick="return false;" src="/images/u53.png"  value="0">
+                    <input type="image" class="queren" onclick="return false;" src="/images/dui.png"  value="1">
+                </form>
+                </br>
+
+                <p><%=data[i].mcontent%></p>
+            </div>
+            <%
+            }
+            }
+            }
+            %>
+
+            <div class="block" >
+                <p style="font-size:20px; text-align:center;">加载更多</p>
+            </div>
+
+        </div>
 
     </div>
-
-    <%}%>
-    <div class="form-group">
-        <button class="btn btn-default center-block" type="submit">确认审核</button>
-    </div>
-</form>
-
-<%-include bfooter%>
+</div>
+</body>
+</html>

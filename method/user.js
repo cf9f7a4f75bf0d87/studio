@@ -30,9 +30,9 @@ var userSchema= mongoose.Schema({
     uheadPic:String,//头像url
 
     usex:Number,//0：男，1：女
-//
+
     uscore:{type:Number,default:10},//用户积分，default：10，注册就有十分，一个项目8分，leader10分
-//
+
     uroll:Number,//0：超级管理员，1：管理员，2：成员，3：申请者
 
     uregTime:Number,//注册时间

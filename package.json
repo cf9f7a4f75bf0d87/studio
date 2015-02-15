@@ -13,7 +13,11 @@
     "serve-favicon": "~2.1.3",
     "debug": "~2.0.0",
     "ejs": "~0.8.5",
-     "mongoose":"*"
+     "mongoose":"*",
+      "async":"*",
+      "express-session":"*",
+      "connect-multiparty":"*",
+    "multer":"*"
 
   }
 }

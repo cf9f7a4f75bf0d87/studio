@@ -5,6 +5,8 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var multer = require("multer");
+
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
@@ -21,7 +23,6 @@ app.set('view engine', 'ejs');
 //***********use session************
 app.use(session(
     {
-
         resave:false,
         saveUninitialized:false,
         secret: 'keyboard cat'}
@@ -34,6 +35,21 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+//2015/02/09  上传..
+//app.use(require('connect-multiparty')());
+app.use(multer({
+    dest: './public/uploads/',
+    rename: function (fieldname, filename) {
+        return filename.replace(/\W+/g, '-').toLowerCase() + Date.now()
+    }
+}))
+
+app.use(bodyParser({
+    keepExtensions:true,
+    limit:10000000,  // 10M limit
+    defer:true
+}))
 
 
 ////login control.
