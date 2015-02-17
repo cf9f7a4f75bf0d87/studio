@@ -29,6 +29,13 @@ function render_deal(err,res,data,path){
     }
 }
 
+//处理仅查找数据,然后返回数据的逻辑
+function return_data(err,data,close,callback){
+    if(err){callback(err,null);}
+    else{callback(null,data)}
+}
+
 exports.json_reply      = json_reply;
 exports.update_deal     = update_deal;
 exports.render_deal     = render_deal;
+exports.return_data     = return_data;

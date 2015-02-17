@@ -57,7 +57,7 @@ var exampleSchema=mongoose.Schema({//榜样集合,
 
     etime:{type:Date,default:Date()},
 
-    econtent: String//榜样介绍
+    econtent:{ type:String }//榜样介绍
 
 });
 var cultureSchema = mongoose.Schema(//文化 (包含于studio,用于介绍工作室..)

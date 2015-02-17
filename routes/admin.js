@@ -1040,38 +1040,28 @@ router.post("/sendout/editAchievement",function(req,res){
 })
 
 router.post("/sendout/delAchievement",function(req,res){
-    adminCl.delachievement(req.body.cid,function(err,data){tools.json_reply(err,res);});
+    adminCl.delachievement(req.body.cid,function(err){tools.json_reply(err,res);});
 })
 
-router.post('/sendout/acSendout',function(req,res) {
-    //var sname=req.session.sname;
-    var sname = "RoseOffice";
-
-    var atitle = req.body.atitle;
-    var acontent = req.body.acontent;
-    var atime = req.body.atime;
-    var apic = req.body.apic;
-
-    adminCl.acSendout(sname,atitle,acontent,apic,atime,function(err){
-        if(err){res.render('error',{message:err})}
-        else{
-            res.render('ok',{message:"上传成功.."});
-        }
-    });
-});
 
 //榜样的发布..
 router.get('/sendout/examples',function(req,res){
-    //var sname=req.session.sname;
-    var sname="RoseOffice";
-    adminCl.exampleInfo(function(err,docs){
-        if(err){
-            res.render('error',{message:err});
-        }else{
-            res.render('aexampleSendout',{docs:docs});
-        }
-    });
+    adminCl.exampleInfo(function(err,data){tools.render_deal(err,res,data,"aexample");});
 });
+
+router.post("/sendout/addExample",function(req,res){
+    adminCl.addachievement(req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
+})
+
+router.post("/sendout/editExample",function(req,res){
+    adminCl.editachievement(req.body.cid,req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
+})
+
+router.post("/sendout/delExample",function(req,res){
+    adminCl.delachievement(req.body.cid,function(err){tools.json_reply(err,res);});
+})
+
+
 router.post('/sendout/exampleSendout',function(req,res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";

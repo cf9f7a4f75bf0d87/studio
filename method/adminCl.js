@@ -1519,23 +1519,9 @@ function acSendout(sname,atitle,acontent,apic,atime,callback){
  * @param callback
  */
 function exampleInfo(callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-
-        studio.findOne({},{sexamples:1,_id:0},function(err,docs){
-            db.close();
-            if(err) callback(err,null);
-            else if(docs==null){
-                callback("没有找到任何信息..",null);
-            }else{
-                callback(null,docs.sexamples);
-            }
-        });
-    });
-
+   odb(function(close){
+        studio.findOne({},{sexamples:1,_id:0},function(err,data){find_data(err,data,close,callback);});
+   });
 }
 
 /**
@@ -1567,6 +1553,32 @@ function exampleSendout(sname,etitle,econtent,epic,etime,callback){
 
     });
 
+}
+
+function addexample(title,content,pic,time,callback){
+    odb(function(close){
+        studio.update({},{$push:{"sexamples":{etitle:title,epic:pic,etime:time,econtent:content}}},function(err,num){
+            if(err){close();callback(err,null);}
+            else if(num!=1){close();callback("not update",null);}
+            else{
+                studio.find({},{sexamples:{$slice:-1}},function(err,doc){find_data(err,doc[0].sexamples[0]._id||null,close,callback)});
+            }
+        })
+    })
+}
+
+function editexample(cid,title,content,pic,time,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({"sexamples._id":cid},{$set:{"sexamples.$.etitle":title,"sexamples.$.epic":pic,"sexamples.$.etime":time,"sexamples.$.econtent":content}},function(err,num){update_deal(err,num,close,callback); })
+    })
+}
+
+function delexample(cid,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+        studio.update({},{$pull:{"sexamples":{_id:cid}}},function(err,num){update_deal(err,num,close,callback)});
+    })
 }
 
 
@@ -2392,3 +2404,8 @@ exports.delevent              = delevent;
 exports.addachievement        = addachievement;
 exports.editachievement       = editachievement;
 exports.delachievement        = delachievement;
+
+//榜样展示
+exports.addexample            = addexample;
+exports.editexample           = editexample;
+exports.delexample            = delexample;
