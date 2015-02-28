@@ -1,0 +1,39 @@
+
+	        #a { width:1002px; height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
+		    h {font-size: 28px;}
+		    p {float: left; font-size: 16px; font-family: 微软雅黑; margin-top: 0;}
+		    #b {width:760px; height:700px;border:0px #000000 solid; margin: 10px auto;}
+
+		     table {border-collapse: collapse; border: 1px #000000 solid; margin-top: 30px; margin-left: 30px;}
+		     td {border: 1px #000000 solid; font-family: 微软雅黑; height: 20px;}
+		     tr {border: 1px #000000 solid; font-family: 微软雅黑;}
+
+		     p1 { font-size: 16px; font-family: 微软雅黑; margin-left:300px; }
+		     p2 { font-size: 16px; font-family: 微软雅黑; margin-left:30px; }
+
+
+		     
+		     .a_x {width: 70px;}
+		     .b_x {width: 118px;}
+		     .d_x {width: 200px;}
+		     .f_x {width: 48px;}
+		     .g_x {width: 48px;}
+
+		     .o { width: 72px;}
+		     .o2 { width: 80px;}
+
+		     #new {display: none; width: 732px;}
+		     #new_2 {display: none; width: 732px;}
+		     #old {display: none;}
+           
+           .a {width:70px; }
+           .b {width: 118px;}
+           .c {width:72px;}
+           .d {width: 200px;}
+           .e {width: 80px;}
+           .f {width: 48px;}
+           .g {width: 48px;}
+
+           #page {margin-left: 100px; }
+		   
+

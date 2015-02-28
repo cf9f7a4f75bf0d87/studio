@@ -6,15 +6,13 @@ var Schema=mongoose.Schema;
 
 var groupSchema=mongoose.Schema({//组别集合
 
-   // ID:{type:Number,_id:true},
+    gname:{type:String},//组名
 
-    gname:String,//组名
+    gcontent:{type:String},//组介绍
 
-    gcontent:String,//组介绍
+    gbackgroundPic:{type:String},//图url
 
-    gbackgroundPic:String,//图url
-
-    gleader:{type:Number},//负责人 (id)..
+    gleader:{type:String},//负责人 (id)..
 
     gmember:[ { type: Schema.Types.ObjectId, ref: 'user' }]//成员 (id)
 
@@ -54,9 +52,8 @@ var projectSchema=mongoose.Schema({//项目集合
 
 var skillSchema=mongoose.Schema({
 
-    ID:{type:Number,_id:true},
 
-    skname:String,//技能名称
+    skname:{type:String},//技能名称
 
     skowners:[{type:Schema.ObjectId,ref:'user'}]//技能拥有者
 

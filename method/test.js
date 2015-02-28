@@ -113,6 +113,57 @@ function addProject(option,callback){
     );
 }
 
+/*
+求数组对称差..
+ */
+//
+//Array.prototype.each = function(fn){
+//    fn = fn || Function.K;
+//    var a = [];
+//    var args = Array.prototype.slice.call(arguments, 1);
+//    for(var i = 0; i < this.length; i++){
+//        var res = fn.apply(this,[this[i],i].concat(args));
+//        if(res != null) a.push(res);
+//    }
+//    return a;
+//};
+//
+///**
+// * 得到一个数组不重复的元素集合
+// * 唯一化一个数组
+// * @returns {Array} 由不重复元素构成的数组
+// */
+//Array.prototype.uniquelize = function(){
+//    var ra = new Array();
+//    for(var i = 0; i < this.length; i ++){
+//        if(!ra.contains(this[i])){
+//            ra.push(this[i]);
+//        }
+//    }
+//    return ra;
+//};
+//Array.prototype.contains = function(obj) {
+//    var i = this.length;
+//    while (i--) {
+//        if (this[i] === obj) {
+//            return true;
+//        }
+//    }
+//    return false;
+//}
+
+function arrayCha(a,b,callback){
+
+                var add        = a.uniquelize().each(function(o){return b.contains(o)?null:o});
+                console.log(a+"<<<<"+b);
+                console.log(">>"+add.length);
+                var del        = b.uniquelize().each(function(o){return a.contains(o)?null:o});
+                console.log(a+"<<<<"+b);
+                console.log(del);
+    callback(null);
+
+}
 exports.addGroup = addGroup;
 exports.simple=simple;
 exports.addProject=addProject;
+exports.arrayCha        =   arrayCha;

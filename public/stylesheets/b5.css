@@ -1,0 +1,56 @@
+
+        h  { font-family: "微软雅黑"; font-size: 24px; padding-left: 24px;} 
+        p {font-family: "微软雅黑"; margin-top: 0;}
+        span { font-family: "微软雅黑"; padding-left: 4px;}
+
+
+        #a { width:1002px; min-height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
+        #b {width: 870px; min-height: 700px; border:1px #000000 solid; margin: 0 auto;overflow:auto;}
+        #total { width:1002px; min-height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
+        .old {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; position:relative;}
+        #new {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; }
+
+
+         .sp2 { padding-right:40px;}
+         .i1 { width: 100px;margin-bottom: 0px;}
+         .text_x {width: 700px; height: 96px;  margin-top:4px; margin-left:0px; float: left;}
+
+         .a { position:absolute; left:6px;}
+         .d { position:absolute; left:100px;}
+         .b  { position:absolute; left:160px;}
+         .e {position:absolute;left: 340px;}
+         .sp1 {position:absolute; left:340px;}
+
+        #add { font-family: "微软雅黑"; font-size: 16px; text-align:center;}
+
+        .xiugai {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}  
+        .shanchu {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}  
+
+        #input1 { background-image: url(/images/); float: right; margin-right:10px; }
+        #input2 {background-image: url(/images/u77.png); float: right; margin-right: 20px;}
+
+         
+        .div1 {width: 700px; height: 96px;  margin-top:14px; margin-left:30px;  float: left; background: #CFCFCF;}
+        .div2 {width: 330px; height: 96px;  margin-left: 20px; margin-top: 20px; float: left; background:red; display: block;}
+        .div3 {width: 700px; height: 96px;  margin-top:14px; margin-left:30px; float: left; background-color: white;}
+        .div4 { float: left; margin-left: 4px; position:relative; height: 60px; width: 60px; }
+        #div5 { float: left; margin-left: 4px; position:relative; height: 60px; width: 60px; display: none;}
+
+        .div_imgs { width: 700px; height: 70px;  float: left; margin-left:30px; border:0px #000000 solid;background: #F0F8FF;}
+
+         #more {width: 740px; height: 24px;  margin:auto;  border:1px #000000 solid;  }
+        .moban {display: none;}
+
+        .img,.upimg { height: 60px; width: 60px;  border:0px #000000 solid;}
+        .none {width: 0px;  height: 0px; display: none;}
+        
+        /*t是一个包含文字和图集的div*/
+        .t_old { width:800px; min-height:300px; border:1px #000000 solid; margin: 10px auto;}
+        #t_new { width:800px; min-height:300px; border:1px #000000 solid; margin: 10px auto; display: none;}
+        .shanchu_img {width: 18px; height: 18px; position:absolute; left:42px;}
+
+        .div_shanchu_img {display: none; }
+        .add {float: right; display: none;}
+        #add_new {float: right; }
+
+

@@ -1050,47 +1050,24 @@ router.get('/sendout/examples',function(req,res){
 });
 
 router.post("/sendout/addExample",function(req,res){
-    adminCl.addachievement(req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
+    adminCl.addexample(req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
 })
 
 router.post("/sendout/editExample",function(req,res){
-    adminCl.editachievement(req.body.cid,req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
+    adminCl.editexample(req.body.cid,req.body.title,req.body.content,req.body.pic,req.body.time,function(err,data){tools.json_reply(err,res,data);});
 })
 
 router.post("/sendout/delExample",function(req,res){
-    adminCl.delachievement(req.body.cid,function(err){tools.json_reply(err,res);});
+    adminCl.delexample(req.body.cid,function(err){tools.json_reply(err,res);});
 })
 
 
-router.post('/sendout/exampleSendout',function(req,res) {
-    //var sname=req.session.sname;
-    var sname = "RoseOffice";
-
-    var etitle = req.body.etitle;
-    var econtent = req.body.econtent;
-    var etime= req.body.etime;
-    var epic = req.body.epic;
-
-    adminCl.exampleSendout(sname,etitle,econtent,epic,etime,function(err){
-        if(err){res.render('error',{message:err})}
-        else{
-            res.render('ok',{message:"上传成功.."});
-        }
-    });
-});
-
 //项目的发布..
 router.get('/sendout/projects',function(req,res){
-    //var sname=req.session.sname;
-    var sname="RoseOffice";
-    adminCl.projectInfo(function(err,docs){
-        if(err){
-            res.render('error',{message:err});
-        }else{
-            res.render('aprojectSendout',{docs:docs});
-        }
-    });
+    adminCl.projectInfo(function(err,data){tools.render_deal(err,res,data,"aprojects");});
 });
+
+
 router.post('/sendout/projectSendout',function(req,res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";
@@ -1115,7 +1092,21 @@ router.post('/sendout/projectSendout',function(req,res) {
     });
 });
 
-
+//通过姓名查找id..
+router.post("/findId",function(req,res){
+    var name = req.body.name||null;
+    tools.odb(function(close){
+        if(name){
+            user.findOne({uname:name},{_id:1},function(err,data){
+                console.log(err+"  " +data);
+                res.json(data);
+                close();
+            })
+        }else{
+            res.json({_id:null});
+        }
+    })
+})
 //***************人员模块**********************
 
 router.get('/people',function(req,res){
@@ -1145,7 +1136,18 @@ router.get('/people/allgroup', function(req, res) {
 
 });
 
+router.get("/people/peopleInfo",function(req,res){
+    var pagesize = 3;
+    var pagenow = (req.query.now<10||req.query.now>=0)?req.query.now:0;
+    adminCl.peopleinfoall(pagesize,pagenow,function(err,data){
+        tools.render_deal(err,res,data,"apeopleall");})
+})
 
+router.post("/people/infoEdit",function(req,res){
+    adminCl.setpeopleinfo(req.body.cid,req.body.name,req.body.uid,req.body.email,req.body.gname,req.body.roll,req.body.grade,req.body.score,function(err){
+        tools.json_reply(err,res);
+    })
+})
 router.get('/people/adduser', function(req, res) {
     //var sname=req.session.sname;
     var sname = "RoseOffice";

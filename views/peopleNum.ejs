@@ -1,11 +1,67 @@
-<%- include bheader.ejs%>
 
-<div class="container">
-    <%for(var v in data){%>
-    <div class="row"><div class="col-md-12">
-            <p><%=v%></p><strong><%=data[v]%></strong>
-        </div></div>
-   <% }%>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style type="text/css">
+        #a { width:1002px; height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
+        #b {width: 400px; height: 728px; border: 1px #000000 solid; float: left;}
+        #c {width: 598px; height: 728px; border: 1px #000000 solid; float: left;}
 
+        #h1  {font-size: 36px;  padding-left: 20px; padding-top: 20px; margin-top: 4px; margin-bottom: 0px; }
+        p {font-size: 30px; margin-top: 0px; }
+        p2 { margin-left:20px; margin-top: 24px;  float: left; font-size: 30px; font-family: "微软雅黑";}
+
+        #b li {  margin-top: 0px; list-style: none;  padding-left: 80px;padding-top: 10px; font-family:"微软雅黑" ;}
+        table {width: 300px; height: 300px; border:1px #000000 solid; border-collapse:collapse; margin-top: 40px; float: left;}
+
+        tr {border:1px #000000 solid; border-collapse:collapse;}
+        td {border:1px #000000 solid; border-collapse:collapse;}
+        #table2 {width: 300px; height: 24px; border: 1px #000000 solid; border-collapse: collapse;margin-top:0px; margin-left: 110px;}
+
+
+
+    </style>
+
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <script type="text/javascript" src="/javascripts/link_renyuan.js"></script>
+
+</head>
+
+<body>
+<%- include top %>
+<%- include header %>
+<%- include nav%>
+<%- include leftnav%>
+
+
+<div class="contentnav">
+      <span>
+        <a href="/">螺丝工作室后台管理 ></a>
+        <a href="/c_1renyuan">人员</a>
+        <a href="#"></a>
+      </span>
 </div>
-<%- include bfooter.ejs%>
+
+<div id="a">
+    <div id="b">
+        <p id="h1">数据统计</p>
+
+         <ul>
+            <% if(typeof(data)=="object"&&data.length>0){%>
+           <%for(var i=0;i<data.length;i++){%>
+               <li><b><%=data[i].name%></b>:<%=data[i].num%></li>
+           <%}}else{%>
+               <li>没有啦..</li>
+           <%}%>
+        </ul>
+
+    </div>
+</div>
+</body>
+
+
+</html>

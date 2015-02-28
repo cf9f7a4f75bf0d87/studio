@@ -1,0 +1,185 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>全部人员</title>
+
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/c3.css">
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="/javascripts/link_renyuan.js"></script>
+    <script type="text/javascript" src="/javascripts/link_c3.js"></script>
+
+
+</head>
+
+<body>
+
+<%- include top %>
+<%- include header %>
+<%- include nav%>
+<%- include leftnav%>
+
+
+<div class="contentnav">
+	      <span>
+	        <a href="/">螺丝工作室后台管理 ></a>
+	        <a href="/a_1tongzhi">人员 ></a>
+	        <a href="#">全部人员</a>
+	      </span>
+</div>
+
+
+<div id="a">
+
+    <div id="b">
+        <h>全部人员</h>
+        <table>
+
+
+
+
+            <tr>
+                <td class="a">姓名</td>
+                <td class="b">学号</td>
+                <td class="c">组别</td>
+                <td class="d">电子邮箱</td>
+                <td class="e">角色</td>
+                <td class="f">年级</td>
+                <td class="g">积分</td>
+                <td class="xiugai">编辑</td>
+                <td class="chuli">删除</td>
+            </tr>
+
+            <% if(typeof(data)=="object"){
+                for(var i=0;i<data.length;i++){%>
+
+            <tr class="old">
+                <td hidden class="i"><%=data[i]._id%></td>
+                <td class="a"><%=data[i].uname%></td>
+                <td class="b"><%=data[i].uid%></td>
+                <td class="c"><%=data[i].ugroupId.gname%></td>
+                <td class="d"><%=data[i].uemail%></td>
+                <td class="e"><%=data[i].uroll%></td>
+                <td class="f"><%=data[i].ugrade%></td>
+                <td class="g"><%=data[i].uscore%></td>
+                <td><input type="image" src="/images/bianji.png" class="xiugai"></td>
+                <td><input type="image" src="/images/u53.png" class="shanchu"></td>
+            </tr>
+            <%
+            }
+            }%>
+
+
+
+
+
+
+
+            <!--  模板 new  超级管理员-->
+
+            <tr id="new">
+                <td hidden><input type="hidden" class="i_x"></td>
+                <td > <input type="text" class="a_x"> </td>
+                <td > <input type="text" class="b_x"> </td>
+                <td>
+                    <select class="o">
+                        <option value="group0" class="op0">group0</option>
+                        <option value="group1" class="op1">group1</option>
+                        <option value="group2" class="op2">group2</option>
+                        <option value="group3" class="op3">group3</option>
+                        <option value="group4" class="op4">group4</option>
+                        <option value="group5" class="op5">group5</option>
+                    </select>
+                    <span class="c_x"></span>
+                </td>
+
+                <td > <input type="text" class="d_x"></td>
+
+
+                <td >
+                    <select class="o2">
+                        <option value="0" class="o0">0</option>
+                        <option value="1" class="o1" >1</option>
+                        <option value="2" class="o2">2</option>
+                    </select>
+                    <span class="e_x"></span>
+                </td>
+
+
+                <td >  <input type="text" class="f_x"> </td>
+                <td >  <input type="text" class="g_x"> </td>
+                <td><img src="/images/dui.png" class="queren"></td>
+                <td><img src="/images/u53.png" class="shanchu"></td>
+            </tr>
+
+
+
+            <!-- 模板 new_2 管理员 -->
+
+            <tr id="new_2">
+                <td > <input type="text" class="a_x"> </td>
+                <td > <input type="text" class="b_x"> </td>
+
+                <td>
+                    <select class="o">
+                        <option value="group0" class="op0">group0</option>
+                        <option value="group1" class="op1">group1</option>
+                        <option value="group2" class="op2">group2</option>
+                        <option value="group3" class="op3">group3</option>
+                        <option value="group4" class="op4">group4</option>
+                        <option value="group5" class="op5">group5</option>
+                    </select>
+                    <span class="c_x"></span>
+                </td>
+
+                <td > <input type="text" class="d_x"></td>
+
+
+                <td >
+                    <span class="e_x"></span>
+                </td>
+
+
+                <td >  <input type="text" class="f_x"> </td>
+                <td >  <input type="text" class="g_x"> </td>
+                <td><img src="/images/dui.png" class="queren"></td>
+                <td><img src="/images/u53.png" class="shanchu"></td>
+            </tr>
+
+
+            <!--  模板 old -->
+
+            <tr  id="old">
+                <td hidden class="i"></td>
+                <td class="a"></td>
+                <td class="b"></td>
+                <td class="c"></td>
+                <td class="d"></td>
+                <td class="e"></td>
+                <td class="f"></td>
+                <td class="g"></td>
+                <td><img src="/images/bianji.png" class="xiugai"></td>
+                <td><img src="/images/u53.png" class="shanchu"></td>
+            </tr>
+        </table>
+
+        </br>
+        </br>
+        <p1><a> <上一页</a> </p1>
+        <p2><a> 下一页></a> </p2>
+
+
+
+    </div>
+</div>
+
+
+
+
+</body>
+</html>

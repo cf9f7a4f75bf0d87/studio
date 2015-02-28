@@ -8,8 +8,8 @@ var skills=require('./other').skill;
 var projects=require('./other').project;
 var studio=require("./studio").studio;
 var e_db = require("./e_db");
-//var user=require('./user')(e_db.connection);
-
+var tools=require("./small");
+var config = require("./config");
 //用户登录验证函数..
 function checkUser(username,password,callback){
     mongoose.connect("mongodb://localhost/studio");
@@ -28,7 +28,6 @@ function checkUser(username,password,callback){
             }else{
                 console.log('user password is ..'+user.upwd);
                 if(password!=user.upwd){
-
                     db.close();
                  return callback('password is wrong..');
                 }else{
@@ -111,31 +110,31 @@ function getInfo(username,callback){
 //}
 
 
+/**
+ * 返回数据库中 组的名字和对应id
+ * 用于初始化某些界面
+ * @param callback
+ */
 function groupInfo(callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function(){
-
-        groups.find({},"gname _id",function(err,data){
-            db.close();
-           if(err)  callback(err,null);
-           else{
-                callback(null,data)
-            }
-        });
-    });
+  tools.odb(function(close) {
+      groups.find({}, "gname _id", function (err, data) {
+         tools.return_data(err,data,close,callback);
+      });
+  });
 }
 
-function getAllSkills(callback){
-    skills.find({},function(err,docs){
-        if(err)callback(err,null);
-        else{
-            callback(null,docs);
-        }
-    })
-}
+/**
+ * 获取所有技能..
+ * 该部分逻辑已经写入config文件中..
+ */
+//function getAllSkills(callback){
+//    skills.find({},function(err,docs){
+//        if(err)callback(err,null);
+//        else{
+//            callback(null,docs);
+//        }
+//    })
+//}
 /**
  *  个人信息编辑..
  * @param _id 用户id
@@ -206,33 +205,117 @@ function pwdEdit(_id,oPwd,nPwd,callback){
 
 function getSkill(_id,callback){
 
-        user.findOne({_id: _id}).populate('uskills',"skname -_id").exec(function (err, docs) {
+        user.findOne({_id: _id}).populate('uskills',"skname -_id").exec(function (err, data) {
             if (err) callback(err, null);
             else {
                 if(docs==null) callback("not find..",null);
-                callback(null, docs);
+                callback(null, data);
             }
         });
 }
+
 /**
- * 编辑技能树..
- * @param req
- * @param res
+ * 获取用户的技能
+ * @param _id
+ * @param callback
  */
-function skillEdit(_id,skills,callback){
-   // skills=skills.toArray();
-    console.log(skills);
-    _id=mongoose.Types.ObjectId(_id);
-    //
-    //user.update({_id:_id},{$addToSet:{uskills:{$each:skills}}},function(err,numAffected,raw){
-                user.update({_id:_id},{$set:{uskills:skills}},function(err,numAffected,raw){
-                    if(err) callback(err);
-                    else if(numAffected == 0){
-                        callback("技能未更新成功..");
-                    }else{
-                        callback(null);
-                    }
-                });
+function userskill(_id,callback){
+    tools.odb(function(close){
+        user.findOne({_id: _id}).populate('uskills',"skname -_id").exec(function (err, data) {
+           tools.return_data(err,data.uskills||null,close,callback);
+        });
+    })
+}
+///**
+// * 编辑技能树.. 不再使用
+// * @param req
+// * @param res
+// */
+//function skillEdit(_id,skills,callback){
+//   // skills=skills.toArray();
+//    console.log(skills);
+//    _id=mongoose.Types.ObjectId(_id);
+//    //
+//    //user.update({_id:_id},{$addToSet:{uskills:{$each:skills}}},function(err,numAffected,raw){
+//                user.update({_id:_id},{$set:{uskills:skills}},function(err,numAffected,raw){
+//                    if(err) callback(err);
+//                    else if(numAffected == 0){
+//                        callback("技能未更新成功..");
+//                    }else{
+//                        callback(null);
+//                    }
+//                });
+//}
+
+/**
+ * 新增自定义技能
+ */
+function skilladd(skill,callback){
+    tools.odb(function(close){
+        skills.create({skname:skill,skowners:[]},function(err){
+            close();
+            config.skill_n2i_init(function(){
+                callback(err);
+            })
+        })
+    })
+}
+/**
+ * 求出新增技能,加入技能列表中;减少的技能,从列表中移除
+ */
+function skilledit(uid,skills,callback){
+    tools.odb(function(close){
+        uid     = mongoose.Types.ObjectId(uid);
+        user.findOne({_id:uid},{uskills:1},function(err,userone){
+            var old_skills = userone.uskills;
+            var add        = skills.uniquelize().each(function(o){return old_skills.contains(o)?null:o});
+
+            skillsadd(add,uid,function(err){
+                if(err){console.log(err);}  // 没有处理错误
+                else{
+                    var del        = old_skills.uniquelize().each(function(o){return skills.contains(o)?null:o});
+                    skillsdel(del,uid,function(err){
+                        if(err){console.log(err);} // 没有处理错误
+                        else{
+                            var skills_id = skills.uniquelize().each(function(o){return config.skill_n2i[o];});
+                           user.update({_id:uid},{$set:{uskills:skills_id}},function(err,num){
+                               tools.update_deal(close,err,num,callback);
+                           })
+                        }
+                    })
+                }
+            });
+        });
+    })
+}
+
+function skillsadd(add,uid,callback){
+    if(add.length>0){
+        var addone= add.pop();
+        tools.skillin(uid,config.skill_n2i[addone],function(err){
+            console.log("error   ( skillsadd ) "+ err);
+            skillsadd(add,uid,callback);
+        })
+    }else{
+        //当遍历完毕时 调用回调函数,
+        //未保存出错信息, 以后改进
+        callback(null);
+    }
+}
+
+
+function skillsdel(del,uid,callback){
+    if(del.length>0){
+        var delone= del.pop();
+        tools.skillsout(uid,config.skill_n2i[delone],function(err){
+            console.log("error   ( skillsdel ) "+ err);
+            skillsdel(del,uid,callback);
+        })
+    }else{
+        //当遍历完毕时 调用回调函数,
+        //未保存出错信息, 以后改进
+        callback(null);
+    }
 }
 /**
  * 加入创新组
@@ -364,61 +447,44 @@ function findSameSkillUser(req,res) {
 }
 /**
  * 新版本 志同道合..1117 搞了一下午,我擦,就数据库写错了..
- * @param uname
  * @param uid
  * @param callback
  */
-function findSameSkillUsers(uname,uid,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    var id = mongoose.Types.ObjectId(uid);
-    db.on('error',console.error.bind(console,"connect error.."));
-    db.once('open',function(){
+function findSameSkillUsers(uid,callback){
+   tools.odb(function(close) {
        // skills.find({skowners:id},"skname -_id skowners",function(err,docs){
-       skills.find({skowners:id},{skowners:1,skname:1}).populate("skowners","uname",'user',null,{multi:true}).exec(function(err,docs){
-            if(err){db.close();callback(err,null)}
-            else{
-                db.close();
-                callback(err,docs);
-            }
-            })
-    });
+       skills.find({skowners:uid},{skowners:1,skname:1}).populate("skowners","uname",'user',null,{multi:true}).exec(function(err,data){
+           tools.return_data(err, data, close, callback);
+       });
+   });
 }
 /**
  * 用户项目信息..
- * @param req
- * @param res
+ * @param username
+ * @param callback
  * 用户做过的项目,正在做的项目  正在进行的项目..(projects)
  * 传出的数据格式  {正在做的项目的个数,做过的项目的个数,正在招募人员的项目的个数}
  */
 function userProjectInfo(username,callback){
-        mongoose.connect("mongodb://localhost/studio");
-        var db=mongoose.connection;
-
-        db.on('error',console.error.bind(console,'connection error:******'));
-
-        db.once('open',function() {
-
+       tools.odb(function(close){
             user.findOne({uname: username}, '-_id uprojectsTaked uprojectsTaking', function (err, userone) {
                 if (err){
-                    db.close();
+                    close();
                     callback(err,null);
                 }
                 else if(userone==null)
                 {
-                    db.close();
+                    close();
                     callback("no this user..", null);
                 }
                 else{
                     projects.find({pstaute: 0}).count().exec(function (err, docs) {
-
-                        db.close();
+                        close();
                         var data = {};
                         data.pTaked = userone.uprojectsTaked.length;
                         data.pTaking = userone.uprojectsTaking.length;
                         data.pGoing = docs;
                         callback(null, data);
-
                     });
                 }
             });
@@ -473,32 +539,73 @@ function userProjectInfo(username,callback){
  * @param callback
  */
 function projectsMy(uname,uid,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    var id=mongoose.Types.ObjectId(uid);
-
-    db.on('error',console.error.bind(console,"connection error:"));
-    db.once('open',function() {
-        projects.find({$or:[{pleader:id},{pmembers:id}]}).populate("pleader","uname -_id","user",null).populate("pmembers","uname -_id","user",null).exec(function(err,docs){
-            db.close();
-            callback(err,docs);
+   tools.odb(function(close){
+       var id=mongoose.Types.ObjectId(uid);
+        projects.find({$or:[{pleader:id},{pmembers:id}]}).populate("pleader","uname -_id","user",null).populate("pmembers","uname -_id","user",null).exec(function(err,data){
+         tools.return_data(err,data,close,callback);
         })
     });
 }
 
 //通过状态查找我的项目
+//招募中, 进行中,已完成,已死..
 function projectsClass(uid,cls,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    var id=mongoose.Types.ObjectId(uid);
-
-    db.on('error',console.error.bind(console,"connection error:"));
-    db.once('open',function() {
-        projects.find({$or:[{pleader:id},{pmembers:id}],pstaute:cls}).populate("pleader","uname -_id","user",null).populate("pmembers","uname -_id","user",null).exec(function(err,docs){
-            db.close();
-            callback(err,docs);
+   tools.odb(function(close){
+       var id = mongoose.Types.ObjectId(uid);
+        projects.find({$or:[{pleader:id},{pmembers:id}],pstaute:cls}).populate("pleader","uname -_id","user",null).populate("pmembers","uname -_id","user",null).exec(function(err,data){
+           tools.return_data(err,data,close,callback);
         })
     });
+}
+/*
+    用户未审核的项目
+ */
+function projectsnotcheck(uid,callback){
+    tools.odb(function(close){
+        user.findOne({_id:uid}).populate("uprojectsAsked").exec(function(err,data){
+            tools.return_data(err,(data?data.uprojectsAsked||null:null),close,callback);
+        })
+    })
+}
+
+
+function findmyprojects(uid,status,callback){
+    switch(status){
+        case 0:case "0":
+            projectsnotcheck(uid,callback);
+            break;
+        case 1:case "1":
+            projectsClass(uid,0,callback);
+            break;
+        case 2:case "2":
+            projectsClass(uid,1,callback);
+            break;
+        case 3:case "3"://返回的是  状态为 已完成和已死的项目,  调用两次函数,最后回调传出两次的结果叠加
+            projectsClass(uid,2,function(err1,data1){if(err1){console.log("(   find my porjects ) :   "+err1)}projectsClass(uid,3,function(err2,data2){if(err2){console.log("(    find my porjects ) :   "+err2)}callback(null,data1||[]+data2||[])});});
+            break;
+        default :
+            callback("not found..",null);
+    }
+}
+
+/*
+退出未审核的项目
+ */
+function quitmyproject(uid,pid,callback){
+    tools.odb(function(close){
+        console.log(pid+"<<<"+uid);
+        studio.findOne({"sprojectMessages.uid":uid,"sprojectMessages.pid":pid},{},function(err,doc){
+            if(err){close();callback(err)}
+            else if(doc==null){close();callback("不符合要求..")}
+            else{
+                projects.update({_id:pid},{$pull:{pmembers:uid}},function(err,num){console.log("( quit my project ) "+ err + "<<num  " + num );
+                    studio.update({},{$pull:{sprojectMessages:{uid:uid,pid:pid}}},function(err,num){console.log("( quit my project ) "+ err + "<<num  " + num );
+                        user.update({_id:uid},{$pull:{uprojectsAsked:pid}},function(err,num){tools.update_deal(close,err,num,callback)});
+                    })
+                })
+            }
+        })
+    })
 }
 
 //退出项目..
@@ -506,7 +613,7 @@ function projectQuit(uid,pid,content,callback){
     mongoose.connect("mongodb://localhost/studio");
     var db=mongoose.connection;
     var id=mongoose.Types.ObjectId(uid);
-    var pid=mongoose.Types.ObjectId(pid);
+    pid=mongoose.Types.ObjectId(pid);
 
     db.on('error',console.error.bind(console,"connection error:"));
     db.once('open',function() {
@@ -571,21 +678,14 @@ function projectsList(ptype,callback){
  * @param callback
  */
 function projectsLists(ptype,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function() {
+   tools.odb(function(close){
         if(ptype=="all"){
-            projects.find({pstaute:0}).populate('pleader','uname -_id','user',null).populate('pmembers','uname -_id',"user",null).exec(function(err,docs){
-                db.close();
-                callback(err,docs);
+            projects.find({pstaute:0}).populate('pleader','uname -_id','user',null).populate('pmembers','uname -_id',"user",null).exec(function(err,data){
+                tools.return_data(err,data,close,callback);
             });
         }else{
             projects.find({pstaute:0,ptype:ptype}).populate('pleader','uname -_id','user',null).populate('pmembers','uname -_id',"user",null).exec(function(err,docs){
-                db.close();
-                callback(err,docs);
+                tools.return_data(err,data,close,callback);
             });
         }
     });
@@ -601,35 +701,15 @@ function projectsLists(ptype,callback){
 function joinProjects(userid,pid,content,callback){
     userid=mongoose.Types.ObjectId(userid);
     pid=mongoose.Types.ObjectId(pid);
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    db.on('error',console.error.bind(console,'connection error:******'));
-    db.once('open',function() {
+  tools.odb(function(close){
         user.update({_id:userid},{$addToSet:{uprojectsAsked:pid}},function(err,num){
-
-            if(err){  db.close();callback(err);}
-            else if(num!=1) {  db.close();callback("未加入成功..");}
-            else{
+           tools.update_pass(err,num,function(){
                 user.findOne({_id:userid},{uname:1,uemail:1},function(err,userone){
-                    if(err||userone==null){
-                        db.close();
-                        callback(err);
-                    }else{
-                        studio.update({sname:"RoseOffice"},{$push:{sprojectMessages:{uid:userone._id,uname:userone.uname,uemail:userone.uemail,mcontent:content,pid:pid}}},function(err,num){
-                            db.close();
-                            if(err) return  callback(err);
-                            else if(num!=1){
-                                callback("未成功更新。。");
-                            }else{
-                                 callback(null);
-                            }
-                        });
-                    }
-                })
+                  tools.find_pass(err,userone,function(){
+                      studio.update({sname:"RoseOffice"},{$push:{sprojectMessages:{uid:userone._id,uname:userone.uname,uemail:userone.uemail,mcontent:content,pid:pid}}},function(err,num){
+                          tools.update_deal(close,err,num,callback);
 
-            }
-        })
-    });
+                   });})})});})});
 }
 /**
  * 用户发送反馈消息..
@@ -690,14 +770,13 @@ exports.checkUser= checkUser;
 exports.getInfo=getInfo;
 exports.infoEdit=infoEdit;
 exports.pwdEdit=pwdEdit;
-exports.skillEdit=skillEdit;
 exports.joinGroup=joinGroup;
 exports.findSameSkillUser=findSameSkillUser;
 exports.userProjectInfo=userProjectInfo;
 //exports.projectMy=projectMy;
 exports.projectsList=projectsList;
 exports.sendFeedBack=sendFeedBack;
-exports.getAllSkills=getAllSkills;
+
 exports.getSkill=getSkill;
 exports.findSameSkillUsers=findSameSkillUsers;
 exports.projectsMy=projectsMy;
@@ -706,3 +785,11 @@ exports.groupInfo=groupInfo;
 exports.joinProjects=joinProjects;
 exports.logout=logout;
 exports.leaveMsg=leaveMsg;
+
+exports.userskill    =  userskill;
+exports.skilledit    =  skilledit;
+exports.skilladd     =  skilladd;
+
+
+exports.findmyprojects  = findmyprojects;
+exports.quitmyproject   = quitmyproject;

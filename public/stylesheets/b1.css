@@ -1,0 +1,20 @@
+
+
+             #a { width:442px; height:726px;border:1px #000000 solid; float:left; margin-left: 2px;}
+             #b {width: 560px; height:726px; border: 1px #000000 solid; float: left;}
+             #p1 {font-size: 36px;  padding-left: 20px; padding-top: 20px; margin-top: 4px; margin-bottom: 0px; }
+             #p2 {font-size: 36px;  padding-left: 20px; padding-top: 20px; margin-top: 4px;}
+             #a li { list-style:none; padding-left: 70px; padding-top: 10px; font-family: "微软雅黑";}
+             .table {width: 300px; height: 300px; border:1px #000000 solid; border-collapse:collapse; margin-top: 0px; margin-left: 20px;}
+
+             tr {border:1px #000000 solid; border-collapse:collapse;}
+             td {border:1px #000000 solid; border-collapse:collapse;}
+             .table2 {width: 300px; height: 24px; border: 1px #000000 solid; border-collapse: collapse;margin-top:0px;}
+                .tr1{  height: 30px; }
+                .td1 { width: 150px; }
+                .op {margin-top:0px; width: 100px;height: 30px; }
+                .page {width: 300px; height: 40px; border:1px #000000 solid; border-collapse:collapse; margin-top: 0px; margin-left: 20px;	}
+              #ul1 {margin-top: 36px;}
+ 
+             
+             

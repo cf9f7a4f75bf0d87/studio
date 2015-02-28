@@ -14,6 +14,7 @@ var projects=require('./other').project;
 var studio=require("./studio").studio;
 var service=require("./service");
 var tools=require("./small");
+var config = require("./config");
 
 
 
@@ -27,6 +28,7 @@ function odb(f){
 
     });
 }
+
 
 /**
  * 获取工作室的一些数据..
@@ -1520,39 +1522,8 @@ function acSendout(sname,atitle,acontent,apic,atime,callback){
  */
 function exampleInfo(callback){
    odb(function(close){
-        studio.findOne({},{sexamples:1,_id:0},function(err,data){find_data(err,data,close,callback);});
+        studio.findOne({},{sexamples:1,_id:0},function(err,data){console.log(data);find_data(err,data.sexamples,close,callback);});
    });
-}
-
-/**
- * 榜样发布..存入数据库..
- * @param sname
- * @param etitle
- * @param econtent
- * @param epic
- * @param etime
- * @param callback
- */
-function exampleSendout(sname,etitle,econtent,epic,etime,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-    console.log(sname);
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-
-        studio.update({sname:sname},{$push:{sexamples:{etitle:etitle,econtent:econtent,epic:epic,etime:etime}}},function(err,num){
-            db.close();
-            if(err) callback(err);
-            else if(num!=1){
-                callback("未成功更新..");
-            }else{
-                callback(null);
-            }
-        });
-
-    });
-
 }
 
 function addexample(title,content,pic,time,callback){
@@ -2024,92 +1995,13 @@ function teamData(sname,callback){
  * @param upwd
  * @param callback
  */
-function addUser(sname,uname,uid,uemail,ugroupId,ugrade,uheadPic,usex,uroll,upwd,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-    var group=mongoose.Types.ObjectId(ugroupId);
-    console.log(group);
-    console.log(ugroupId);
-
-
-    db.on('error',console.error.bind(console,"connect error"));
-    db.once('open',function() {
-        user.create({uname:uname,uid:uid,uemail:uemail,ugroupId:group,ugrade:ugrade,uheadPic:uheadPic,usex:usex,uroll:uroll,upwd:upwd},function(err,idoc){
-
-               if(err){ db.close();callback(err)}
-            else{
-                    db.close();callback(null);
-                //    var m = uskills.toString().split(',');
-               //    console.log(m);
-                 //  console.log(typeof(m));
-
-//                   async.series([
-//                       function(callback){
-//                           m.forEach(function(val){
-//                               skills.update({_id:val._id},{$push:{sknowner:idoc._id}},function(err,num){
-//                                     console.log(err + " ********" + num);
-////
-//                                    });
-//                           })
-//                       }
-//                   ],function(err){
-//                        console.log("@@@@@@@@@@@2");
-//                       callback("test");
-//                   });
-
-
-                   //@ 没有实现..
-//                   groups.find().where("_id").in(uskills).exec(function(err,docs){
-//
-//                        console.log(docs.length);
-//                       async.series([
-//                           function(callback) {
-//                               docs.forEach(function (val) {
-//                                    group.update({_id:val._id},{$push:{sknowner:idoc._id}},function(err,num){
-//                                        console.log(err + " ********" + num);
-//
-//                                    });
-//                               });
-//                           }
-//                       ],function(err,msg){
-//                           console.log("@@@@@@@@@@@@2");
-//                           return callback(err,msg);
-//                       });
-
-
-
-
-
-
-
-
-
-             // @方法一:  groups.find().where("_id").in(uskills).update({},{$push:{skowners:doc._id}},{safe: false, multi: true}).exec(function(err,num){
-
-
-
-//                  // @方法二: 希望通过单次查询,修改多行,没有实现..
-//                   var uid=mongoose.Types.ObjectId(idoc._id);
-//                   console.log(idoc._id);
-//                   console.log(typeof(idoc._id));
-//                   skills.update({_id:{$in:m}},{$push:{skowners:idoc._id}},{safe: false, multi: true},function(err,num){
-//                       db.close();
-//                    console.log(num);
-//                       console.log(err);
-//                       if(err)callback(err);
-//                       else if(num!=1){
-//                           //不知道为啥,成功了..
-//                          // callback("不成功。。");
-//                           callback(null);
-//                       }else{
-//                           callback(null);
-//                       }
-//
-//                   })
-               }
+function addUser(uname,uid,uemail,group,ugrade,uheadPic,usex,uroll,upwd,callback){
+    tools.odb(function(close){
+        user.create({uname:uname,unickname:uname,uid:uid,uemail:uemail,ugroupId:config.group_n2i(group),ugrade:ugrade,uheadPic:uheadPic,usex:usex,uroll:uroll,upwd:upwd,uregTime:new Date(),uskills:[],uprojectsAsked:[],uprojectsTaked:[],uprojectstaking:[]},function(err){
+            close();if(err){console.log(err);callback(err)}else{callback(null);}
         })
-
     });
+
 }
 
 /**
@@ -2266,6 +2158,155 @@ function peopleInfo(sname,group,pagesize,pagenow,callback){
 }
 
 /**
+ * 查找人员信息  2-19
+ * @param group  组名
+ * @param pagesize  分页大小
+ * @param pagenow   当前页数
+ * @param callback
+ */
+function peopleinfo(group,pagesize,pagenow,callback){
+    odb(function(close){
+         for(var name in config.group_n2i ){
+             if(group == name){
+                 user.find({ ugroupId:config.group_n2i[name]}).skip(pagenow*pagesize).limit(pagesize).populate('ugroupId','_id gname','group',null,{multi:true}).exec(function(err,data){
+                     find_data(err,data,close,callback);
+                 });
+             }
+         }
+    })
+}
+function peopleinfoall(pagesize,pagenow,callback){
+    odb(function(close){
+        user.find().skip(pagenow*pagesize).limit(pagesize).populate('ugroupId','_id gname','group',null,{multi:true}).exec(function(err,data){console.log(err + "    " + data)
+          find_data(err,data,close,callback);
+        });
+    });
+}
+
+
+
+/**
+ * 更新用户信息  部分信息   用于人员部分
+ * @param cid
+ * @param name
+ * @param email
+ * @param gname
+ * @param roll
+ * @param grade
+ * @param score
+ * @param callback
+ */
+function setpeopleinfo(cid,name,uid,email,gname,roll,grade,score,callback){
+    odb(function(close){
+        cid = mongoose.Types.ObjectId(cid);
+       user.findOne({_id:cid},function(err,data){
+           if(err){close();callback(err);}
+           else if(data==null){close();callback("no user");}
+           else{
+               var gid = data.ugroupId;
+               data.uname=name;data.uid=uid;data.uemail=email;data.ugroupId=config.group_n2i[gname];data.uroll=roll;data.ugrade=grade;data.uscore=score;
+               data.save(function(err){
+                   console.log(data.ugroupId);
+                   if(err){close();callback(err);}
+                   else{
+                       if(gid==config.group_n2i[gname]){
+                           close();
+                           callback(null);
+                       }else{
+                            groupout(cid,gid,function(err){if(err){close();callback(err)}else{
+                                groupin(cid,config.group_n2i[gname],function(err){close();if(err){callback(err)}else{
+                                    callback(null);
+                                }
+                                })
+                            }})
+                       }
+                   }
+               })
+           }
+       })
+    })
+}
+
+/**
+ * 从组中删除 某人 | 未打开数据库
+ * @param uid
+ * @param gid
+ * @param callback
+ */
+function groupout(uid,gid,callback){
+    uid = mongoose.Types.ObjectId(uid);
+    gid = mongoose.Types.ObjectId(gid);
+    groups.update({_id:gid},{$pull:{gmember:uid}},function(err,num){
+        console.log(num);
+        callback((err)?err:((num==1)?null:null));
+    })
+}
+
+
+/**
+ * 向组中加入 某人 | 未打开数据库
+ * @param uid
+ * @param gid
+ * @param callback
+ */
+function groupin(uid,gid,callback){
+    uid = mongoose.Types.ObjectId(uid);
+    gid = mongoose.Types.ObjectId(gid);
+    groups.update({_id:gid},{$push:{gmember:uid}},function(err,num){
+        console.log(num);
+        callback((err)?err:((num==1)?null:null));
+    })
+}
+
+/**
+ * 从项目中删除 某人 | 未打开数据库
+ * @param uid
+ * @param pid
+ * @param callback
+ */
+function projectout(uid,pid,callback){
+    uid = mongoose.Types.ObjectId(uid);
+    pid = mongoose.Types.ObjectId(pid);
+    projects.update({_id:pid},{$pull:{pmembers:uid}},function(err,num){
+        console.log(num);
+        callback((err)?err:((num==1)?null:null));
+    })
+}
+
+
+/**
+ * 向项目中加入 某人 | 未打开数据库
+ * @param uid
+ * @param pid
+ * @param callback
+ */
+function projectin(uid,pid,callback){
+    uid = mongoose.Types.ObjectId(uid);
+    pid = mongoose.Types.ObjectId(pid);
+    projects.update({_id:pid},{$push:{pmembers:uid}},function(err,num){
+        console.log(num);
+        callback((err)?err:((num==1)?null:null));
+    })
+}
+/**
+ * 通过条件查找用户部分信息   what= 查找的区间
+ * @param cid
+ * @param what
+ * @param callback
+ */
+function getuserinfo(cid,what,callback){
+    cid=mongoose.Types.ObjectId(cid);
+    users.findOne({_id:cid},what,function(err,data){
+        callback((err)?err:null,data[what]||null);
+    })
+}
+
+function deleteuser(cid,callback){
+    odb(function(close){
+       getuserinfo(cid,"ugroupId")
+    })
+}
+/**
  * 各个组的人数..
  * @param sname
  * @param callback
@@ -2350,7 +2391,6 @@ exports.eventsInfo=eventsInfo;
 exports.acSendout=acSendout;
 exports.acInfo=acInfo;
 exports.exampleInfo=exampleInfo;
-exports.exampleSendout=exampleSendout;
 exports.projectInfo=projectInfo;
 exports.projectSendout=projectSendout;
 exports.projectStauteInfo=projectStauteInfo;
@@ -2409,3 +2449,9 @@ exports.delachievement        = delachievement;
 exports.addexample            = addexample;
 exports.editexample           = editexample;
 exports.delexample            = delexample;
+
+//查找人员信息
+exports.peopleinfo            = peopleinfo;
+exports.peopleinfoall         = peopleinfoall;
+exports.setpeopleinfo         = setpeopleinfo;
+

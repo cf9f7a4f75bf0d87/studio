@@ -7,7 +7,10 @@ var router = express.Router();
 var test = require('../method/test');
 var service = require('../method/service');
 var adminCl = require("../method/adminCl");
+var user = require("../method/user");
 //var formidable = require("formidable");
+var tools = require("../method/small");
+var config = require("../method/config");
 
 router.get('/json',function(req,res){
     res.render('test',{});
@@ -135,5 +138,34 @@ router.get("/file",function(req,res){
 
 router.get("/uploads",function(req,res){
     res.render("upload",{});
+})
+
+
+router.get("/find",function(req,res){
+    var name = req.query.n||null;
+    console.log(name);
+    tools.odb(function(close){
+        if(name){
+            user.findOne({uname:name},{_id:1},function(err,data){
+                console.log(err+"  " +data);
+                res.json(data);
+                close();
+            })
+        }else{
+            res.json({ok:0});
+        }
+    })
+})
+
+router.get("/n2i",function(req,res){
+    res.json({data:config.skill_n2i,data2:config.group_n2i});
+})
+
+router.get("/arrayCha",function(req,res){
+    var a=[1,2,3];
+    var b= [2,1,5,6];
+    test.arrayCha(a,b,function(err){
+        res.end();
+    })
 })
 module.exports = router;

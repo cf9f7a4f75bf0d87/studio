@@ -1,0 +1,33 @@
+ #total { width:1002px; min-height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
+        .old {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; position:relative;}
+        #old {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; position:relative; display: none;}
+        #new {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; display: none;}
+        #t {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; }
+        h  { font-family: "微软雅黑"; font-size: 24px; padding-left: 24px;} 
+        p {font-family: "微软雅黑"; margin-top: 0;}
+        span { font-family: "微软雅黑"; padding-left: 4px;}
+        
+
+         .sp1 { margin-right: 10px;}
+         .sp2 { margin-left:238px;}
+         .i1 { width: 100px;}
+         .text_x {width: 390px;height: 96px; resize:none; margin-top: -10px;}
+
+         .a { position:absolute; left:6px;}
+         .d { position:absolute; left:100px;}
+         .b  { position:absolute; left:160px;}
+
+        #add { font-family: "微软雅黑"; font-size: 16px; text-align:center;}
+
+        .xiugai {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}  
+        .shanchu {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}  
+
+        #input1 { background-image: url(/images/); float: right; margin-right:10px; }
+        #input2 {background-image: url(/images/u77.png); float: right; margin-right: 20px;}
+
+         
+        .div1 {width: 390px; height: 96px;  margin-left: 10px; margin-top: 44px; float: left; background: blue;}
+        .div2 {width: 330px; height: 96px;  margin-left: 20px; margin-top: 20px; float: left; background:red; display: block;}
+         .div3 {width: 390px; height: 96px;  margin-left: 10px; margin-top: 32px; float: left; }
+        #more {width: 740px; height: 24px;  margin:auto;  border:1px #000000 solid;  }
+        .moban {display: none;}

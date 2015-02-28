@@ -33,46 +33,28 @@
         <div id="a">
 
             <p>已选技能</p>
-            <div id="yixuan" style="width:440px;height:80px">
-
-                <% allSkills.forEach(function(skill){%>
-                <span><input value="<%=skill.skname%>" readonly><img  src="/images/u53.png"></span>
-                <%})%>
+            <div id="sel" style="width:440px;height:80px">
 
 
-                <span><input value="socket" disabled><img  src="/images/u53.png"></span>
             </div>
 
             <p>技能列表</p>
             <div id="wei" style="width:440px;height:80px">
-                <% allSkills.forEach(function(skill){%>
-                <span><input value="<%=skill.skname%>" readonly><img  src="/images/u77.png"></span>
-                <%})%>
+                <%for(var i=0;i<data.allSkills.length;i++){%>
+                <span><input value="<%=data.allSkills[i]%>" readonly><img class="add" src="/images/u77.png"></span>
+                <%}%>
             </div>
 
+            <input type="button" class="sel_ok" value="选好啦">
+            <div>
             <p>自定义技能</p>
-            <!--<input id="shuru" type="text"><img id="zidingyi" src="/images/u77.png">-->
-            <form id="check" action="" method="post">
-                <% allSkills.forEach(function(skill){%>
-                    <input class="c" type="checkbox" value="<%=skill._id%>" name="skills">
-                <%})%>
-                <input id="qd" type="submit" value="确定">
-            </form>
-            <div id="s">
-                <p>熟练度：PHP</p>
-                <input type="submit" value="excelent"><br>
-                <input type="submit" value="good"><br>
-                <input type="submit" value="basic"><br>
+            <input id="shuru" type="text"><img id="zidingyi" src="/images/u77.png">
             </div>
+
         <div>
-            <% if(typeof(skills)=='object'){
-            skills.forEach(function(skill){%>
-            <li>已有技能:<%=skill%></li>
-            <%});%>
-            <% }else if(typeof(skills)=='string'){%>
-            <li>已有技能:<%=skills%></li>
-            <%}else{%>
-            <li>目前没有技能..</li>
+            <%
+            for(var j = 0;j<data.userSkills.length;j++){%>
+            <li>已有技能:<%=data.userSkills[j]%></li>
             <%}%>
         </div>
         </div>
