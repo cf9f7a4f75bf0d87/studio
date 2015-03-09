@@ -1,174 +1,55 @@
 $(document).ready(function() {
 	$("#s").hide();
-	$("#yixuan input").hide();
-	$("#yixuan img").hide();    //隐藏已选技能。
-	
-	$(".wei1").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：js");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei1").fadeOut("slow");
-			$(".yi1").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei2").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：php");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei2").fadeOut("slow");
-			$(".yi2").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei3").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：java");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei3").fadeOut("slow");
-			$(".yi3").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei4").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：python");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei4").fadeOut("slow");
-			$(".yi4").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei5").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：node");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei5").fadeOut("slow");
-			$(".yi5").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei6").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：canvas");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei6").fadeOut("slow");
-			$(".yi6").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei7").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：js");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei7").fadeOut("slow");
-			$(".yi7").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei8").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：css");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei8").fadeOut("slow");
-			$(".yi8").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei9").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：webgl");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei9").fadeOut("slow");
-			$(".yi9").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
-	$(".wei0").click(function(){
-		$("#s").fadeIn("slow");
-		$("#s p").text("熟练度：socket");
-		$("#s").not("input").click(function(){
-			$("#s").fadeOut();
-		});
-		$("#s input").unbind().click(function(){
-			$(".wei0").fadeOut("slow");
-			$(".yi0").fadeIn("slow");
-			$("#s").fadeOut("slow");
-		});
-	});
 
+    $(document).on("click",".del",function(){
+        var p = $(this).parent();
+        var val = $(p).find("input").val();
 
+        var child =  $('<span><input value="'+val+'" readonly><img class="add" src="/images/u77.png"></span>');
+        $("#wei").append(child);
+        $(p).remove();
+    });
 
-	  
+    $(document).on("click",".add",function(){
+        var p = $(this).parent();
+        var val = $(p).find("input").val();
 
+        var child = $('<span><input value="'+val+'" readonly><img class="del" src="/images/u53.png"></span>');
+        $("#sel").append(child);
+        $(p).remove();
+    })
 
-	$(".yi1").click(function(){
-		$(".yi1").fadeOut("slow");
-		$(".wei1").fadeIn("slow");
-	});
-	$(".yi2").click(function(){
-		$(".yi2").fadeOut("slow");
-		$(".wei2").fadeIn("slow");
-	});
-	$(".yi3").click(function(){
-		$(".yi3").fadeOut("slow");
-		$(".wei3").fadeIn("slow");
-	});
-	$(".yi4").click(function(){
-		$(".yi4").fadeOut("slow");
-		$(".wei4").fadeIn("slow");
-	});
-	$(".yi5").click(function(){
-		$(".yi5").fadeOut("slow");
-		$(".wei5").fadeIn("slow");
-	});
-	$(".yi6").click(function(){
-		$(".yi6").fadeOut("slow");
-		$(".wei6").fadeIn("slow");
-	});
-	$(".yi7").click(function(){
-		$(".yi7").fadeOut("slow");
-		$(".wei7").fadeIn("slow");
-	});
-	$(".yi8").click(function(){
-		$(".yi8").fadeOut("slow");
-		$(".wei8").fadeIn("slow");
-	});
-	$(".yi9").click(function(){
-		$(".yi9").fadeOut("slow");
-		$(".wei9").fadeIn("slow");
-	});
-	$(".yi0").click(function(){
-		$(".yi0").fadeOut("slow");
-		$(".wei0").fadeIn("slow");
-	});
-	
+    $('.submit').click(function(){
+        alert("submit..");
+        var skills = [];
+        var sel = $("#sel").find("input");
+        for(var i=0;i<sel.length;i++){
+            skills.push($(sel[i]).val());
+        }
+        console.log(skills);
+        var group = $("input[name=group]:checked").val();
+        var grade = $("input[name=grade]:checked").val();
+        alert(grade);
+
+        var findName = $("input[name=findName]").val();
+
+        $.ajax({
+            url:'find',
+            type:"post",
+            data:{skills:skills,group:group,grade:grade,name:findName},
+            dataType:"json",
+            success:function(msg){
+                console.log(msg.data);
+                $("#show tbody").children().remove();
+                for(var i=0;i<msg.data.length;i++){
+                var tr = $('<tr><td>'+msg.data[i].uname+'</td><td>'+msg.data[i].uid+'</td><td>'+msg.data[i].ugroupId+'</td><td>'+msg.data[i].uemail+'</td><td>'+msg.data[i].uroll+'</td><td>'+msg.data[i].ugrade+'</td><td>'+msg.data[i].uscore+'</td><td><img src="/images/u59.png"></td><td><img src="/images/u53.png"></td></tr>');
+                $("#show tbody").append(tr);
+                }
+            },
+            error:function(){
+                alert("error..");
+            }
+        })
+    })
    
 });

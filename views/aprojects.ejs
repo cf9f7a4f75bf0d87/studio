@@ -39,170 +39,98 @@
 
 <div id="a">
     <h>项目发布</h>
-    <select id="o">
+    <select id="status">
         <option value="0">招募成员中</option>
         <option value="1">进行中项目</option>
         <option value="2">成功项目</option>
         <option value="3">已死项目</option>
-        <option value="4">所有项目</option>
-        <option value="5" selected>状态</option>
+        <option value="all">所有项目</option>
+        <option value="all" selected>状态</option>
     </select>
 
-    <select id="o2" value="select2">
-        <option class="o1" value="0">geek创意</option>
-        <option class="o2" value="1">科研项目</option>
-        <option class="o3" value="2">外包项目</option>
-        <option class="o4" value="3">校园作品</option>
-        <option value="4"  selected>类型</option>
+    <select id="cls">
+        <option  value="2">geek创意</option>
+        <option  value="0">科研项目</option>
+        <option  value="1">外包项目</option>
+        <option  value="3">校园作品</option>
+        <option  value="all">所有类型</option>
+        <option  value="all" selected >类型</option>
     </select>
     </br>
 
-
-
-
-    <div class="t_old div" >
-        <div class="old">
-
-            <span class="a" >工作室成立</span>
-            <span class="b" >状态:招募成员中</span>
-            <span class="l">类型:geek创意</span>
-            <span >更新日期: <span class="c">2014.11.24</span> </span>
-
-
-            <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
-            <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
-            <!-- img -->
-            <div class="div1">
-                <p class ="text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laogravida
-                </p>
-            </div>
-            <!-- text -->
-            <div class="div2">
-                <img src="/images/u55.png" width="330px;" height="98px;" >
-            </div>
-
-
-            <span class="chengyuan">成员:</span>
-            <span class="d">小明 大飞哥</span>
-
-
-        </div>
-
-        <span class="fujian">附件: </span>
-        <div class="fj_wendang">
-            <!-- 不显示的文档 用于当无文档时的复制 -->
-            <div class="wendang_1">
-                <a> <span>需求文档docx</span> </a>
-                <input  type="image"  class="shanchu_fujian"  value="删除" src="/images/u53.png">
-            </div>
-
-
-            <div class="wendang">
-                <a> <span>需求文档docx</span> </a>
-                <input  type="image"  class="shanchu_fujian"  value="删除" src="/images/u53.png">
-            </div>
-
-            <div class="add_wendang">
-                <input type="image" class="tianjia_fujian" value="添加" src="/images/u77.png">
-                <div class="none"> <input type="file" class ="file">  </div>
-            </div>
-        </div>
+    <div id="more">
+        <p id="add">添加组织</p>
     </div>
-
-
-
-
-
-
-
-
     <!--    /*两个模板*/ -->
-
     <!--  模板1 修改时 使用 -->
-    <div id="t_new"   >
-
-
-        <div id="new"  >
-
+    <div class ="t_new">
+        <div class="old"  >
+            <input type="hidden" class="e_x">
             <input type="text" class="a_x" class="i1"  >
-
-            <select class="op" value="select">
-                <option class="op0" value="0">招募成员中</option>
-                <option class="op1" value="1">进行中项目</option>
-                <option class="op2" value="2">成功项目</option>
-                <option class="op3" value="3">已死项目</option>
-                <option class="op4" value="4">所有项目</option>
+            <select class="status">
+                <option class="op0" value="0">开始报名</option>
+                <option class="op1" value="1">火热进行</option>
+                <option class="op2" value="2">圆满完成</option>
+                <option class="op3" value="3">有事烧纸</option>
+                <option class="op4" value="all">所有项目</option>
             </select>
 
-            <select class="op2" value="select2">
-                <option class="o1" value="0">geek创意</option>
-                <option class="o2" value="1">科研项目</option>
-                <option class="o3" value="2">外包项目</option>
+            <select class="cls">
+                <option class="o1" value="2">geek创意</option>
+                <option class="o2" value="0">科研项目</option>
+                <option class="o3" value="1">外包项目</option>
                 <option class="o4" value="3">校园作品</option>
+                <option value="all">所有类型</option>
             </select>
 
+            <span class="t">更新日期: <input type="text" class="c_x" readonly></span>
 
 
-            <span class="b_x"></span>
-            <span class="l_x"> </span>
-            <span class="sp2">更新日期: <input type="text" class="c_x" ></span>
-
-
-            <input  type="image"  class="shanchu"  value="删除"    src="/images/u53.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
-            <input  type="image"  class ="queren2"  value="确认" class="images" src="/images/dui.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
-
-
+            <input  type="image"  class="cancel"  src="/images/u53.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
+            <input  type="image"  class ="sub_project"   class="images" src="/images/dui.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
 
             <div class="div3">
                 <textarea class ="text_x"> </textarea>
             </div>
+        </div>
+        <div class="n1">
+            <span class="members">成员:</span>
 
+            <div class="up_member" >
+                <input type="text" class="member_name" style="width:40px;margin-left:8px;">
+                <input type="image" class="add_member" src="/images/u77.png">
 
-
-            <div class="div2">
-                <img src="/images/u55.png" width="330px;" height="98px;" >
             </div>
-
-            <span class="chengyuan">成员:</span>
-            <input type="text" class="d_x">
         </div>
 
 
-        <span class="fujian">附件: </span>
-        <div class="fj_wendang">
-            <!-- 不显示的文档 用于当无文档时的复制 -->
-            <div class="wendang_1">
-                <a> <span>需求文档docx</span> </a>
-                <input  type="image"  class="shanchu_fujian"  value="删除" src="/images/u53.png">
-            </div>
+        <div class="n2">
+            <span class="fujian">附件: </span>
+            <div class="docs">
+                <!-- 不显示的文档 用于当无文档时的复制 -->
 
-            <div class="add_wendang" style="display:block;">
-                <input type="image" class="tianjia_fujian" value="添加" src="/images/u77.png">
-                <div class="none"> <input type="file" class ="file">  </div>
+
+                <div class="up_doc" style="display:block;">
+                    <input type="image" class="my_doc" value="添加" src="/images/u77.png">
+                    <div class="none"> <input type="file" class ="add_doc" hidden>  </div>
+                </div>
             </div>
         </div>
 
 
     </div>
-
-
-
     <!--   模板2  添加时 使用 -->
-
-
-    <div id="old" class="old" style="display:none;">
-
-
+    <div class="template" >
+    <div class="old">
+        <input type="hidden" class="e">
         <span class="a"></span>
-        <span class="b">状态:招募成员中</span>
-        <span class="l">类型:geek创意</span>
-	                            <span class="sp1">更新日期:
-			                     <span class="c"></span> </span>
+        <span class="b"></span>
+        <span class="l"></span>
+        <span class="t">更新日期:<span class="c"></span> </span>
 
 
-        <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
-        <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
+        <input  type="image"  class="del_project"  src="/images/u53.png">
+        <input  type="image"  class="edit_project"    src="/images/bianji.png" >
 
         <div class="div1">
             <p class ="text">
@@ -210,119 +138,34 @@
             </p>
         </div>
 
-        <div class="div2">
-            <img src="/images/u55.png" width="330px;" height="98px;" >
+    </div>
+        <div class="n1">
+            <span class="members">成员:</span>
+
+
+            <div class="up_member">
+                <input type="text" class="member_name" style="width:40px;margin-left:8px;">
+                <input type="image" class="add_member" src="/images/u77.png">
+            </div>
+
         </div>
 
-        <span class="chengyuan">成员:</span>
-        <span class="d">小明 大飞哥</span>
-
-    </div>
-
-
-
-    <div class="t_old div" >
-        <div class="old">
-            <span class="a" >imagine cup</span>
-            <span class="b" >状态:进行中项目</span>
-            <span class="l">类型:校园作品</span>
-            <span >更新日期: <span class="c">2014.11.24</span> </span>
-            <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
-            <!-- img -->
-            <div class="div1">
-                <p class ="text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laogravida
-                </p>
-            </div>
-            <!-- text -->
-            <div class="div2">
-                <img src="/images/u55.png" width="330px;" height="98px;" >
+        <div class="n2">
+            <span class="fujian">附件: </span>
+            <div class="docs">
+                <div class="up_doc">
+                    <input type="image" class="doc" value="添加" src="/images/u77.png">
+                    <div class="none"> <input type="file" class ="add_doc">  </div>
+                </div>
             </div>
 
-
-            <span class="chengyuan">成员:</span>
-            <span class="d">小明 大飞哥</span>
         </div>
-        <span class="begin">开始时间:<span class="time">2015.1.30</span></span>
+
 
     </div>
-
-
-
-    <div class="t_old div" >
-        <div class="old">
-            <span class="a" >imagine cup</span>
-            <span class="b" >状态:成功项目</span>
-            <span class="l">类型:校园作品</span>
-            <span >更新日期: <span class="c">2014.11.24</span> </span>
-            <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
-            <!-- img -->
-            <div class="div1">
-                <p class ="text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laogravida
-                </p>
-            </div>
-            <!-- text -->
-            <div class="div2">
-                <img src="/images/u55.png" width="330px;" height="98px;" >
-            </div>
-
-
-            <span class="chengyuan">成员:</span>
-            <span class="d">小明 大飞哥</span>
-        </div>
-        <span class="begin">开始时间:<span class="time">2015.1.30</span></span>
-        <span class="over">结束时间:<span class="time">2015.3.1</span></span>
-    </div>
-
-
-    <div class="t_old div" >
-        <div class="old">
-            <span class="a" >imagine cup</span>
-            <span class="b" >状态:已死项目</span>
-            <span class="l">类型:外包项目</span>
-            <span >更新日期: <span class="c">2014.11.24</span> </span>
-            <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
-            <!-- img -->
-            <div class="div1">
-                <p class ="text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean euismod bibendum laogravida
-                </p>
-            </div>
-            <!-- text -->
-            <div class="div2">
-                <img src="/images/u55.png" width="330px;" height="98px;" >
-            </div>
-
-
-            <span class="chengyuan">成员:</span>
-            <span class="d">小明 大飞哥</span>
-        </div>
-        <span class="begin">开始时间:<span class="time">2015.1.30</span></span>
-        <span class="over">结束时间:<span class="time">2015.2.29</span></span>
-    </div>
-
-
-
-    <div id="more">
-        <p id="add">添加组织</p>
-    </div>
-
-
-
-
-
-    <!--  <div id="f_1"></div>
-     <div id="f_2"></div>
-     <div id="f_3"></div> -->
 
 
 </div>
-
-
 </body>
-
-
-
 
 </html>

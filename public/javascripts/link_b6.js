@@ -13,6 +13,7 @@ $(document).ready(function(){
             var c = parent.find(".c").html();
             var e = parent.find(".e").val();
             var text = parent.find(".text").html();
+            var pic = parent.find(".new_img").attr("src");
 
             var parent2= $("#new").clone(true);
             parent2.find(".a_x").val(a);
@@ -20,6 +21,7 @@ $(document).ready(function(){
             parent2.find(".c_x").val(c);
             parent2.find(".e_x").val(e);
             parent2.find(".text_x").val(text);
+            parent2.find(".new_img").attr("src",pic);
             parent2.insertBefore(parent).show();
 
             $(parent).remove();
@@ -98,7 +100,6 @@ $(document).ready(function(){
         var text_x = $(p2).find(".text_x").val();      //   内容
         var pic = $(p2).find(".div2>img").attr("src");
 
-
         $.ajax({
             url: "addAchievement",
             type: "post",
@@ -124,10 +125,11 @@ $(document).ready(function(){
 });
 var flag = false;
 
-$(document).on("click",".div2",function(){
-    var p = $(this);
-
+$(document).on("click",".new_img",function(){
+    var p = $(this).parent();
+    alert("...");
     if(flag){
+        var data = new FormData();
         var files = $(p).find(".add_img")[0].files;
         console.log(files);
         if(files){
@@ -143,7 +145,7 @@ $(document).on("click",".div2",function(){
             processData:false,
             success: function (msg) {
                 alert("success");
-                $(p).find("img").attr("src",msg.data);
+                $(p).find(".new_img").attr("src",msg.path);
             },
             error:function(msg){alert("error");}
 
@@ -154,6 +156,7 @@ $(document).on("click",".div2",function(){
         $(i).click();
         flag=true;
     }
+    alert("***");
 })
 
 });

@@ -1,0 +1,113 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>成果展示发布</title>
+
+
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/b6.css">
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="/javascripts/link_fabu.js"></script>
+    <script type="text/javascript" src="/javascripts/link_b6.js"></script>
+
+</head>
+
+
+
+<body>
+<%- include top %>
+<%- include header %>
+<%- include nav%>
+<%- include leftnav%>
+
+
+<div class="contentnav">
+      <span>
+        <a href="/">螺丝工作室后台管理 ></a>
+        <a href="/b_1fabu">发布 ></a>
+        <a href="#">成果展示发布</a>
+      </span>
+</div>
+
+
+<div id="total">
+    <h>成果展示</h>
+
+    <% if(typeof(data)=='object'){%>
+    <%for(var i=0;i<data.length;i++){%>
+    <div class="old">
+        <input type="hidden" value="<%=data[i]._id%>" class="e">
+        <span class="a"><%=data[i].atitle%></span>
+        <span >更新日期: <span class="c"><%= data[i].atime.toLocaleDateString()%></span> </span>
+
+        <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
+        <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
+
+        <div class="div1">
+            <p class ="text">
+                <%=data[i].acontent%>
+            </p>
+        </div>
+
+        <div class="div2">
+            <input type="file" hidden class="add_img">
+            <img src="<%=data[i].apic%>" class="new_img" width="330px;" height="98px;" >
+
+        </div>
+
+    </div>
+    <%}}
+    else {%><p>啥都没有..<%=data%></p><%}%>
+     <!--    /*两个模板*/ -->
+
+    <!--  模板1 修改时 使用 -->
+    <div id="new" >
+        <input type="hidden" class="e_x">
+        <input type="text" class="a_x" class="i1"  >
+        <span class="sp2">更新日期: <input type="text" readonly class="c_x" ></span>
+
+        <input  type="image"  class="shanchu"  value="删除"    src="/images/u53.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
+        <input  type="image"  class ="queren2"  value="确认" class="images" src="/images/dui.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
+
+        <div class="div3">
+            <textarea class ="text_x">
+            </textarea>
+        </div>
+
+        <div class="div2">
+            <input type="file" hidden class="add_img">
+            <img src="/images/u55.png" class="new_img" width="330px;" height="98px;" >
+        </div>
+    </div>
+
+    <!-- 模板2 old模板 -->
+    <div id="old" >
+
+        <input type="hidden" class="e">
+        <span class="a"></span>
+        <span class="sp1">更新日期: <span class="c"></span> </span>
+        <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
+        <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
+        <div class="div1">
+            <p class ="text">
+            </p>
+        </div>
+        <div class="div2">
+            <input type="file" hidden class="add_img">
+            <img src="/images/u55.png" class="new_img" width="330px;" height="98px;" >
+        </div>
+
+    </div>
+
+    <div id="more">
+        <p id="add">添加成果</p>
+    </div>
+
+</div>
+</body>
+</html>

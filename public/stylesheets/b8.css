@@ -1,13 +1,14 @@
-        h  { font-family: "微软雅黑"; font-size: 24px; padding-left: 24px;} 
-        p {font-family: "微软雅黑"; margin-top: 0;}
-        span { font-family: "微软雅黑"; padding-left: 4px;}
+        h  { font-family: 微软雅黑; font-size: 24px; padding-left: 24px;} 
+        p {font-family: 微软雅黑; margin-top: 0;}
+        span { font-family: 微软雅黑; padding-left: 4px;}
 
 
         #a { width:1002px; min-height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
         #total { width:1002px; min-height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
         .old {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; position:relative;}
+        #old { display: none;}
         .t_old { width:800px; min-height:246px; border:1px #000000 solid; margin: 10px auto; position:relative;}
-        #t_new { width:800px; min-height:246px; border:1px #000000 solid; margin: 10px auto; position:relative; display: none;}
+        .t_new { width:800px; min-height:246px; border:1px #000000 solid; margin: 10px auto; position:relative; display: none;}
         #tt_new { width:800px; min-height:246px; border:1px #000000 solid; margin: 10px auto; position:relative; display: none;}
         #new {width:760px; height:180px; border:1px #000000 solid; margin: 10px auto; position:relative;}
  
@@ -16,47 +17,59 @@
 
          .sp2 { margin-left: 42px;}
          .i1 { width: 100px;}
-         .text_x {width: 390px;height: 96px; resize:none}
+         .text_x {width: 700px;height: 96px; resize:none}
 
          .a { position:absolute; left:6px;}
-         
+          
          .b  { position:absolute; left:120px; top:1px; font-size:14px;}
+         .c  { position:absolute; left:70px; top:1px; font-size:14px; }
          .l  { position:absolute; left:240px; top:1px; font-size:14px;}
+         .t  { position:absolute; left:400px; top:1px; font-size:14px; font-size: 16px;}
+         .d  { float: left; margin-left: 0px; text-decoration: underline;}
+         .d_x {float: left; margin-left:30px; margin-bottom:20px;}
 
-         .d  { position: absolute; left: 44px; bottom:2px;}
+         .a_x {width:110px;}
 
-         .chengyuan {position: absolute;left: 6px; bottom:2px;}
-         .fujian { position: absolute;left:460px; bottom:22px; }
+         .members {float: left; }
+         .fujian { float: left;}
          .begin { position: absolute;left:460px; bottom:22px;}
          .over { position: absolute;left:640px; bottom:22px;}
 
-         .fj_wendang{ position: absolute;left:500px; min-bottom:2px; border: 0px #000000 solid;}
+         .fj_wendang{ float: left; }
          .d_x { position: absolute; left: 46px;bottom:2px;}
-         .wendang {float: left; }
+         .doc {float: left; }
          .wendang_1 {float: left;display: none;}
-         .tianjia_fujian {width: 16px; height: 16px; margin-top: 4px; margin-right: 10px;  float: left; }
-         .add_wendang {float: left; display: none;}
+         .my_doc {width: 16px; height: 16px; margin-top: 4px; margin-right: 10px;  float: left; }
+         .up_doc,.up_member {float: left; display: none;}
 
+         .member { float: left; margin-left: 10px;}
+         
+         .n1 { width: 300px; height: 50px;  float: left; margin-left: 36px; }
+         .n2 { width: 460px; height: 50px;  float: left; } 
 
-        #add { font-family: "微软雅黑"; font-size: 16px; text-align:center;}
+        #add { font-family: 微软雅黑; font-size: 16px; text-align:center;}
 
-        .xiugai {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}  
-        .shanchu {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}
-        .shanchu_fujian {width: 16px; height: 16px; float: right; margin-top: 4px; margin-right: 10px; display: none;} 
+        .edit_project,.sub_project {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}
+        .del_project {width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;}
+        .del_member {width: 16px; height: 16px; margin: 4px 2px; display: none;}
+
+        .del_doc {width: 16px; height: 16px; float: right; margin-top: 4px; margin-right: 10px; display: none;}
 
 
         #input1 { background-image: url(/images/); float: right; margin-right:10px; }
         #input2 {background-image: url(/images/u77.png); float: right; margin-right: 20px;}
 
          
-        .div1 {width: 390px; height: 96px;  margin-left: 10px; margin-top: 44px; float: left; background: blue;}
+        .div1 {width:700px; height: 96px;  float: left; background: blue; margin: 20px 30px;}
         .div2 {width: 330px; height: 96px;  margin-left: 20px; margin-top: 20px; float: left; background:red; display: block;}
-         .div3 {width: 390px; height: 96px;  margin-left: 10px; margin-top: 22px; float: left; }
+        .div3 {width:400px; height: 96px;  float: left;  margin: 20px 30px; }
          
          #more {width: 740px; height: 24px;  margin:auto;  border:1px #000000 solid;  }
         .moban {display: none;}
         .none {width: 0px;  height: 0px; display: none;}
         
-        #o {margin-bottom: 10px;}
+         #o {margin-bottom: 10px;}
+
+
        
 

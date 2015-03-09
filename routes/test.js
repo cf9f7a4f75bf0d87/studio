@@ -168,4 +168,19 @@ router.get("/arrayCha",function(req,res){
         res.end();
     })
 })
+
+//  user.find({uskills:{$in:skills},ugroupId:ugroup,ugrade:grade,uname:new RegExp(name,'i')},function(err,docs){
+router.get("/one_test",function(req,res){
+    tools.odb(function(close){
+      //  user.find({uname:new RegExp(req.query.name,'i')},function(err,data){  //可以实现正则查找   含有name的条目都会被找出来
+        var skills = ["skill4","skill7"];
+        //cc4 cf7
+        //cd5 cc
+        var skills_id  = skills.each(function(o){return config.skill_n2i[o]})
+        user.find({uskills:{$in:skills_id}},function(err,data){//$in  的意思   大概是   $in:[1,2]  可以匹配 [1],[2],[1,2],[1,3],[2,3],以及组合
+            close();
+            res.json({err:err,data:data});
+        })
+    })
+})
 module.exports = router;

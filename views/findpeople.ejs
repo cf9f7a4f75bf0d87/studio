@@ -1,0 +1,95 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/zhaoren.css">
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
+
+    <script type="text/javascript" src="/javascripts/zhaoren.js"></script>
+</head>
+
+<body>
+<%- include top %>
+<%- include header %>
+<%- include nav %>
+<div id="con">
+    <%- include leftnav %>
+    <div class="contentnav">
+		<span>
+        <a href="/">螺丝工作室个人管理 ></a>
+        <a href="/gerenziliao">个人资料 ></a>
+        <a href="/tongdaozhongren">同道中人</a>
+      </span>
+    </div>
+
+    <div id="content">
+        <h2><span>找</span><span>人</span></h2>
+
+        <div id="a">
+            <p>已选技能</p>
+            <div id="sel" style="width:440px;height:80px">
+            </div>
+
+            <p>技能列表</p>
+
+            <div id="wei" style="width:440px;height:80px">
+                <% if(data.skill_name&&data.skill_name.length&&data.skill_name.length>0){%>
+                <% for(var i=0;i<data.skill_name.length;i++){%>
+                    <span><input class="wei" value="<%=data.skill_name[i]%>" readonly><img class="add" src="/images/u77.png"></span>
+                <%}}%>
+            </div>
+
+        </div>
+
+        <div id="group">
+            <p>组别：</p>
+            <input type="radio" name="group" value="noLimit" checked>不限<br>
+            <% if(data.group_name&&data.group_name.length&&data.group_name.length>0){%>
+            <% for(var i=0;i<data.group_name.length;i++){%>
+            <input type="radio" name="group" value="<%=data.group_name[i]%>"><%=data.group_name[i]%><br>
+            <%}}%>
+        </div>
+        <div id="grade">
+            <p>年级：</p>
+            <input type="radio" name="grade" value="noLimit" checked>不限<br>
+            <input type="radio" name="grade" value="14">14<br>
+            <input type="radio" name="grade" value="13">13<br>
+            <input type="radio" name="grade" value="12">12<br>
+            <input type="radio" name="grade" value="11">11<br>
+            <input type="radio" name="grade" value="10">10<br>
+            <input type="radio" name="grade" value="09">09
+        </div>
+        <div id="sousuo">
+            <p>姓名中含有：</p>
+            <input type="text" name="findName">
+            <input style="margin-top:40px" type="submit" class="submit" value="搜 索">
+        </div>
+        <table id=show border="1">
+            <thead>
+                <td>姓名</td>
+                <td>学号</td>
+                <td>组别</td>
+                <td>电子邮箱</td>
+                <td>角色</td>
+                <td>年级</td>
+                <td>积分</td>
+                <td>编辑</td>
+                <td>删除</td>
+            </thead>
+            <tbody>
+
+            </tbody>
+
+        </table>
+        <span id="fanye"><a href="#">上一页</a> <a href="#">下一页</a></span>
+    </div>
+</div>
+</body>
+
+
+
+</html>

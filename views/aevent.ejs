@@ -1,0 +1,178 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>大事件发布</title>
+
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/b5.css">
+
+    <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="/javascripts/link_fabu.js"></script>
+    <script type="text/javascript" src="/javascripts/link_b5.js"></script>
+</head>
+
+
+
+<body>
+<%- include top %>
+<%- include header %>
+<%- include nav%>
+<%- include leftnav%>
+
+<div class="contentnav">
+		      <span>
+		        <a href="//">螺丝工作室后台管理 ></a>
+		        <a href="/b_1fabu">发布 ></a>
+		        <a href="#">大事件发布</a>
+		      </span>
+</div>
+
+
+
+<div id="a">
+    <h>大事件发布</h>
+    <div id="b">
+
+        <%for(var i=0;i<data.length;i++){%>
+        <div class="t_old">
+            <!-- 文字 -->
+            <div class="old">
+                <input class="i" type="hidden" value="<%=data[i]._id%>">
+                <span class="a"><%=data[i].etitle%></span>
+                <span class="e">更新日期: <span class="c"><%= data[i].epubTime.toLocaleDateString()%></span> </span>
+
+
+                <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
+                <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
+
+                <div class="div1">
+                    <p class ="text">
+                       <%=data[i].econtent%>
+                    </p>
+                </div>
+            </div>
+
+            <!-- 放图片集 -->
+            <div class="div_imgs">
+                <!-- 加号图标 -->
+                <div class="add">
+                    <div class="none"> <input type="file" class ="file">  </div>
+                    <div class="div4"> <img src="/images/add.png" class="img add_img"> </div>
+                </div>
+                <!-- 图片 -->
+                <%=data[i].epics.length%>
+                <% for(var j=0;j<data[i].epics.length;j++){%>
+                <div class="div4" >
+                    <div class="div_shanchu_img"> <input  type="image"  class="shanchu_img"   src="/images/u53.png"></div>
+                    <img src="<%=data[i].epics[j]%>" class="upimg" >
+                </div>
+               <%}%>
+
+                <div id="div5" >
+                    <div class="div_shanchu_img"> <input  type="image"  class="shanchu_img"   src="/images/u53.png"></div>
+                    <img src="/images/u55.png" class="upimg" >
+                </div>
+
+            </div>
+
+
+
+        </div><%}%>
+
+
+        <div id="more">
+            <p id="add">添加组织</p>
+        </div>
+
+        <!--    /*两个模板*/ -->
+
+        <!--  模板1 修改时 使用 -->
+
+        <div id="t_new">
+
+            <!--文字部分  -->
+            <div id="old" class="old" style="display:none;">
+
+                <input class="i" type="hidden">
+                <span class="a"></span>
+                <span class="sp1">更新日期: <span class="c"></span> </span>
+
+                <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
+                <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
+
+                <div class="div3">
+                    <p class ="text"> </p>
+                </div>
+            </div>
+
+            <!--文字编辑部分-->
+            <div id="new" >
+                <input class="i_x" type="hidden">
+                <input type="text" class="a_x" class="i1"  >
+
+
+                <span class="sp2">更新日期: <input type="text" class="c_x" ></span>
+                <input  type="image"  class="shanchu"  value="删除"    src="/images/u53.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
+                <input  type="image"  class ="queren2"  value="确认" class="images" src="/images/dui.png" style="width: 18px; height: 18px; float: right; margin-top: 4px; margin-right: 10px;">
+
+                <div class="div3">
+                    <textarea class ="text_x"> </textarea>
+                </div>
+            </div>
+
+
+            <!--图集部分  -->
+            <div class="div_imgs">
+                <!-- 加号图标 -->
+                <div class="add" style="display:block;">
+                    <div class="none"> <input type="file" class ="file">  </div>
+                    <div class="div4"> <img src="/images/add.png" class="img add_img">  </div>
+                </div>
+                <!-- 图片 -->
+
+                <!--用于clone的div5（一直隐藏）  和div4完全相同 防止当div4没有时无法添加div  -->
+                <div id="div5" >
+                    <div class="div_shanchu_img" > <input  type="image"  class="shanchu_img"   src="/images/u53.png" >
+                    </div>
+                    <img src="/images/u55.png" class="upimg" >
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!--   模板2  添加时 使用 -->
+
+
+        <!-- 用于当前页面没有div时 再添加  1若有则按照上面那个复制 2若没有则按照下面这个复制-->
+        <div id="old" class="old" style="display:none;">
+
+            <input class="i" type="hidden">
+            <span class="a"></span>
+            <span class="sp1">更新日期: <span class="c"></span> </span>
+
+
+            <input  type="image"  class="shanchu"  value="删除" src="/images/u53.png">
+            <input  type="image"  class="xiugai"  value="修改"  src="/images/bianji.png" >
+
+            <div class="div3">
+                <p class ="text"> </p>
+            </div>
+        </div>
+
+
+
+
+
+    </div>
+</div>
+
+
+</body>
+
+</html>

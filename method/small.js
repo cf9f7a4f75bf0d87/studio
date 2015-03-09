@@ -79,7 +79,10 @@ function odb(f){
     });
 }
 
-
+//单个字符串转数组,便于处理
+function str2arr(str){
+    return (typeof(str)=="string")?[str]:str;
+}
 
 /**
  * =========数据库简单操作=====================
@@ -165,6 +168,7 @@ function skillsout(uid,sid,callback){
     })
 }
 
+
 /*
 定义数组函数
  */
@@ -211,6 +215,7 @@ exports.return_data     = return_data;
 exports.odb             = odb;
 exports.update_pass     = update_pass;
 exports.find_pass       = find_pass;
+exports.str2arr         = str2arr;
 
 //   数据库 简单操作
 exports.skillin         = skillsin;

@@ -11,6 +11,7 @@ var userCl=require('../method/userCl');
 var async=require('async');
 var mongoose=require('mongoose');
 var tools=require('../method/small');
+var config = require("../method/config");
 
 
 
@@ -1067,30 +1068,67 @@ router.get('/sendout/projects',function(req,res){
     adminCl.projectInfo(function(err,data){tools.render_deal(err,res,data,"aprojects");});
 });
 
-
-router.post('/sendout/projectSendout',function(req,res) {
-    //var sname=req.session.sname;
-    var sname = "RoseOffice";
-
-    var ptitle = req.body.ptitle;
-    var pcontent = req.body.pcontent;
-    var ppubTime= req.body.ppubTime;
-
-    var pstartTime = req.body.pstartTime;
-    var pfinishTime = req.body.pfinishTime;
-    var ptype = req.body.ptype;
-    var pstaute = req.body.pstaute;
-    var pleader = req.body.pleader;
-    var pmembers = req.body.pmembers;
-    var pdocs= req.body.pdocs;
-
-    adminCl.projectSendout(ptitle,pcontent,ppubTime,pstartTime,pfinishTime,ptype,pstaute,pleader,pmembers,pdocs,function(err){
-        if(err){res.render('error',{message:err})}
-        else{
-            res.render('ok',{message:"上传成功.."});
-        }
-    });
+router.post('/sendout/projects',function(req,res){
+    var status =req.body.status||null;
+    var type   = req.body.type||null;
+    if(!status||!type){
+        res.json({success:0,data:[]});
+    }
+    else if(status=="all"&&type=="all"){
+        adminCl.projectInfo(function(err,data){tools.json_reply(err,res,data)});
+    }else if( status=="all"&&type){
+        adminCl.projectbytype(type,function(err,data){tools.json_reply(err,res,data)})
+    }else if( type=="all"&&status){
+        adminCl.projectbystatus(status,function(err,data){tools.json_reply(err,res,data)})
+    }else{
+        adminCl.projectbytypestatus(type,status,function(err,data){tools.json_reply(err,res,data)});
+    }
 });
+
+
+router.post("/sendout/projectAdd",function(req,res) {
+    var title = req.body.title;
+    var content = req.body.content;
+
+    var type = req.body.type;
+    var status = req.body.status;
+    var members = req.body.members||req.body["members[]"]||[];
+    var docs= req.body.docs||req.body["docs[]"]||[];
+
+    adminCl.addproject(title,content,type,status,tools.str2arr(members).each(function(o){return config.user_n2i[o]||null}),tools.str2arr(docs),function(err,data){
+        tools.json_reply(err,res,data);
+    })
+});
+
+router.post("/sendout/projectEdit",function(req,res) {
+    var pid = req.body.pid;
+    var title = req.body.title;
+    var content = req.body.content;
+
+    var type = req.body.type||-1;
+    var status = req.body.status;
+    var members = req.body.members||req.body["members[]"]||[];
+    var docs= req.body.docs||req.body["docs[]"]||[];
+
+
+    switch(type){
+        case 0:case 1:case "0":case "1":
+        adminCl.editproject(pid,title,content,type,status,tools.str2arr(members).each(function(o){return config.user_n2i[o]||null}),tools.str2arr(docs),function(err,data){
+            tools.json_reply(err,res,data);
+        });break;
+        case 2:case 3:case "2":case "3":
+        adminCl.endproject(pid,title,content,type,status,tools.str2arr(members).each(function(o){return config.user_n2i[o]||null}),tools.str2arr(docs),function(err,data){
+            tools.json_reply(err,res,data);
+        });break;
+        default :
+            res.json({success:0});
+    }
+});
+
+router.post("/sendout/projectDel",function(req,res){
+    var pid = req.body.pid||null;
+    adminCl.delproject(pid,function(err){tools.json_reply(err,res)});
+})
 
 //通过姓名查找id..
 router.post("/findId",function(req,res){
@@ -1180,10 +1218,16 @@ router.post('/people/adduser', function(req, res) {
 
 });
 
+router.get("/people/find",function(req,res){
+    tools.render_deal(null,res,{group_name:config.group_name,skill_name:config.skill_name},"findpeople");
+});
 
+router.post("/people/find",function(req,res){
+    adminCl.findPeople(req.body.skills||(req.body["skills[]"]?req.body["skills[]"].each(function(o){return config.skill_n2i[o]}):[]),req.body.group||null,req.body.grade||null,req.body.name||null,function(err,data){tools.json_reply(err,res,data)})
+})
 
 router.get('/index', function(req, res) {
-    res.render('aindex', { title: 'admin' });
+    res.render('aindex', { title: 'admin'});
 });
 
 
@@ -1235,7 +1279,7 @@ router.get('/test',function(req,res){
 //        console.log(err);
 //        console.log("(*****************************)");
 //    })
-    adminCl.findPeople(sname,["5437cc4eaa84a5141a2853cb"],"5437c5fe229fe3981c6135e5","13","aaa",function(err,data){
+    adminCl.findPeople(sname,["5437cc4eaa84a5141a2853cb"],"5437c5fe229fe3981c6135e5","13","user",function(err,data){
         console.log(err+ " *** " + data.length);
         console.log("***********");
     });

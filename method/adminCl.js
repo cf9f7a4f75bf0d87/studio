@@ -1496,20 +1496,9 @@ function delachievement(cid,callback){
  * @param callback
  */
 function acSendout(sname,atitle,acontent,apic,atime,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-    console.log(sname);
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
+  tools.odb(function(close){
         studio.update({sname:sname},{$push:{sachievements:{atitle:atitle,acontent:acontent,apic:apic,atime:atime}}},function(err,num){
-            db.close();
-            if(err) callback(err);
-            else if(num!=1){
-                callback("未成功更新..");
-            }else{
-                callback(null);
-            }
+           tools.update_deal(close,err,num,callback);
         });
     });
 
@@ -1558,115 +1547,148 @@ function delexample(cid,callback){
  * @param callback
  */
 function projectInfo(callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-
-        projects.find({}).populate('pleader pmembers').exec(function(err,docs){
-            db.close();
-            if(err) callback(err,null);
-            else if(docs==null){
-                callback("没有找到任何信息..",null);
-            }else{
-                callback(null,docs);
-            }
+tools.odb(function(close){
+        projects.find({}).populate('pmembers').exec(function(err,data){
+            tools.return_data(err,data,close,callback);
         });
     });
-
 }
 /**
  * 按状态查找
- * @param pstaute
+ * @param status
  * @param callback
  */
-function projectStauteInfo(pstaute,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-
-    projects.find({pstaute:pstaute}).populate('pleader pmembers').exec(function(err,docs){
-            db.close();
-            if(err) callback(err,null);
-            else if(docs==null){
-                callback("没有找到任何信息..",null);
-            }else{
-                callback(null,docs);
-            }
+function projectbystatus(status,callback){
+    tools.odb(function(close){
+    projects.find({pstaute:status}).populate('pmembers').exec(function(err,data){
+        tools.return_data(err,data,close,callback);
         });
     });
-
 }
 
 
 /**
  * 按类型查找
- * @param ptype
+ * @param type
  * @param callback
  */
-function projectTypeInfo(ptype,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-
-        projects.find({ptype:ptype}).populate('pleader pmembers').exec(function(err,docs){
-            db.close();
-            if(err) callback(err,null);
-            else if(docs==null){
-                callback("没有找到任何信息..",null);
-            }else{
-                callback(null,docs);
-            }
+function projectbytype(type,callback){
+    tools.odb(function(close){
+        projects.find({ptype:type}).populate('pmembers').exec(function(err,data){
+            tools.return_data(err,data,close,callback);
         });
     });
+}
 
+
+function projectbytypestatus(type,status,callback){
+    tools.odb(function(close){
+        projects.find({ptype:type,pstaute:status}).populate('pmembers').exec(function(err,data){
+            tools.return_data(err,data,close,callback);
+        });
+    });
+}
+/**
+ * 添加项目
+ * @param title
+ * @param content
+ * @param type
+ * @param status
+ * @param members
+ * @param docs
+ * @param callback
+ */
+function addproject(title,content,type,status,members,docs,callback){
+tools.odb(function(close){
+    projects.create({ptitle:title,pcontent:content,ptype:type,pstaute:status,pmembers:members,pdocs:docs},function(err,data){
+       tools.return_data(err,data._id,close,callback);
+    });
+})
 }
 
 /**
- * 项目发布..存入数据库..
- *
- * @param ptitle
- * @param pcontent
- * @param ppubTime
- * @param pstartTime
- * @param pfinishTime
- * @param ptype
- * @param pstaute
- * @param pleader
- * @param pmembers
- * @param pdocs
+ * 编辑项目
+ */
+function editproject(pid,title,content,type,status,members,docs,callback){
+    tools.odb(function(close){
+        projects.update({_id:pid},{$set:{ptitle:title,pcontent:content,ptype:type,pstaute:status,pmembers:members,pdocs:docs,ptime:new Date()}},function(err,num){
+            tools.update_deal(close,err,num,callback);
+        });
+    })
+}
+
+function ep_studio_apply(pid,callback){
+    studio.update({},{$pull:{sprojectMessages:{pid:pid}}},{multi:true},function(err,num){
+        console.log("ep_studio_apply   >>>"+err+ "   " + num);
+        callback();
+    })
+}
+/**
+ * 结项 (对应用户的 参与项目数组和参与过项目数组  都需要改动 )
+ * @param pid
+ * @param title
+ * @param content
+ * @param type
+ * @param status
+ * @param members
+ * @param docs
  * @param callback
  */
-function projectSendout(ptitle,pcontent,ppubTime,pstartTime,pfinishTime,ptype,pstaute,pleader,pmembers,pdocs,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-    //对传入的 成员id数组进行处理..
-    var ids=pmembers.toString().split(',');
-    console.log(typeof(pdocs) +"        ((("+ typeof(pmembers));
-    console.log(pdocs + "    <<< " + pmembers);
-    console.log(ids);
-    for(var i =0;i<ids.length;i++){
-        if(ids[i].length==0){
-            ids.splice(i,1);
-        }
-    }
-    console.log(ids);
-    db.on('error', console.error.bind(console, "connect error:"));
-    db.once('open', function () {
-        projects.create({ptitle:ptitle,pcontent:pcontent,ppubTime:ppubTime,pstartTime:pstartTime,pfinishTime:pfinishTime,ptype:ptype,pstaute:pstaute,pleader:pleader,pmembers:ids,pdocs:pdocs},function(err){
-            db.close();
-            if(err) callback(err);
-            else{
-                callback(null);
-            }
+function endproject(pid,title,content,type,status,members,docs,callback){
+    tools.odb(function(close){
+        projects.update({_id:pid},{$set:{ptitle:title,pcontent:content,ptype:type,pstaute:status,pmembers:members,pdocs:docs,pfinishTime:new Date()}},function(err,num){
+            ep_users_deal(tools.str2arr(members||[]),pid,function(){ tools.update_deal(close,null,1,callback);})
         });
-    });
+    })
+}
 
+function ep_users_deal(uids,pid,callback){
+    if(uids.length==0){
+        callback();
+    }else{
+        var uid = uids.pop();
+        users.update({_id:uid},{$pull:{uprojectsTaking:pid}},function(err,num){tools.update_pass(err,num,function(){users.update({_id:uid},{$addToSet:{uprojectsTaked:pid}},function(err,num){tools.update_pass(err,num,function(){ep_users_deal(uids,pid,callback)})})})})
+    }
+}
+/**
+ * 删除项目 //只允许删除结项的项目
+ * @param pid
+ * @param callback
+ */
+function delproject(pid,callback){
+    tools.odb(function(close){
+        projects.findOne({_id:pid},function(err,data){
+            if(err){close();callback(err)}
+            else if(data==null){close();callback("not found..")}
+            else{
+                    if(data.pstaute&&(data.pstaute=="2"||data.pstaute==2||data.pstaute==3||data.pstaute=="3")){
+                        user_out_projects(tools.str2arr(data.pmembers||[]),pid,function(){projects.remove({_id:pid},function(err,num){tools.update_deal(close,err,num,callback)});})
+                    }else{
+                        close();callback("not permitted..");console.log("只允许删除已经结项的项目..")
+                    }
+            }
+        })
+
+    })
+}
+
+//没弄清楚报错机制..
+function user_out_projects(uids,pid,callback){
+    if(uids.length==0){
+        callback(null);
+    }else{
+        var uid = uids.pop();
+        user_out_project(uid,pid,function(err){
+            user_out_projects(uids,pid,callback);
+        });
+    }
+}
+
+function user_out_project(uid,pid,callback){
+    user.update({_id:uid},{$pull:{uprojectsTaken:pid}},function(err,num){
+        console.log("user_out_project   >> "+ err + "   " + num);
+        callback(null);
+    })
 }
 
 /**
@@ -2029,8 +2051,6 @@ function editUser(sname,id,uname,uid,unickname,uemail,ugroupId,ugrade,uheadPic,u
     console.log(ugroupId);
     console.log(uskills + "::::" + typeof(uskills));
     var m = uskills.toString().split(',');
-    console.log(m);
-    console.log(typeof(m));
     var mid=mongoose.Types.ObjectId(id);
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -2343,41 +2363,25 @@ function peopleNum(sname,callback){
  * @param name    可为空
  * @param callback
  */
-function findPeople(sname,skills,group,grade,name,callback) {
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-    if(group!=null){
-        var ugroup=mongoose.Types.ObjectId(group);
-    }
-
-    db.on('error', console.error.bind(console, "connect error"));
-    db.once('open', function () {
-    if((grade==""||grade==null)&&(group==""||group==null)){
-        user.find({uskills:{$in:skills},uname:new RegExp(name,'i')},function(err,docs){
-            db.close();
-            console.log(docs+ "  " + err);
-            callback(err,docs);
-        })
-    }else if(grade==""||grade==null){
-        user.find({uskills:{$in:skills},ugroupId:ugroup,uname:new RegExp(name,'i')},function(err,docs){
-            db.close();
-            console.log(docs+ "  " + err);
-            callback(err,docs);
-        })
-    }else if(group==""||group==null){
-        user.find({uskills:{$in:skills},ugrade:grade,uname:new RegExp(name,'i')},function(err,docs){
-            db.close();
-            console.log(docs+ "  " + err);
-            callback(err,docs);
-        })
-    }else{
-        user.find({uskills:{$in:skills},ugroupId:ugroup,ugrade:grade,uname:new RegExp(name,'i')},function(err,docs){
-            db.close();
-            console.log(docs+ "  " + err);
-            callback(err,docs);
-        })
-    }
-
+function findPeople(skills,group,grade,name,callback) {
+    tools.odb(function(close){
+        if((grade==""||grade=="noLimit"||grade==null)&&(group==""||group=="noLimit"||group==null)){
+            user.find({uskills:{$in:skills},uname:new RegExp(name,'i')},function(err,data){
+              tools.return_data(err,data,close,callback);
+            })
+        }else if(grade==""||grade=="noLimit"||grade==null){
+            user.find({uskills:{$in:skills},ugroupId:config.group_n2i[group],uname:new RegExp(name,'i')},function(err,data){
+                tools.return_data(err,data,close,callback);
+            })
+        }else if(group==""||group=="noLimit"||group==null){
+            user.find({uskills:{$in:skills},ugrade:grade,uname:new RegExp(name,'i')},function(err,data){
+                tools.return_data(err,data,close,callback);
+            })
+        }else{
+            user.find({uskills:{$in:skills},ugroupId:config.group_n2i[group],ugrade:grade,uname:new RegExp(name,'i')},function(err,data){
+                tools.return_data(err,data,close,callback);
+            })
+        }
     });
 }
 exports.adminData=adminData;
@@ -2392,9 +2396,6 @@ exports.acSendout=acSendout;
 exports.acInfo=acInfo;
 exports.exampleInfo=exampleInfo;
 exports.projectInfo=projectInfo;
-exports.projectSendout=projectSendout;
-exports.projectStauteInfo=projectStauteInfo;
-exports.projectTypeInfo=projectTypeInfo;
 exports.teamInfo=teamInfo;
 exports.teamInfoEdit=teamInfoEdit;
 exports.teamInfoSendout=teamInfoSendout;
@@ -2455,3 +2456,13 @@ exports.peopleinfo            = peopleinfo;
 exports.peopleinfoall         = peopleinfoall;
 exports.setpeopleinfo         = setpeopleinfo;
 
+//项目发布
+exports.projectbytypestatus   = projectbytypestatus;
+exports.projectbytype         = projectbytype;
+exports.projectbystatus       = projectbystatus;
+
+//项目申请-  后台处理
+exports.addproject            = addproject;
+exports.editproject           = editproject;
+exports.endproject            = endproject;
+exports.delproject            = delproject;

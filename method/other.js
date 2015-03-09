@@ -30,7 +30,7 @@ var projectSchema=mongoose.Schema({//项目集合
 
     pstartTime: {type:Date,default:Date()},//开始时间
 
-    pfinishTime: {type:Date,default:Date()},//结束时间
+    pfinishTime: {type:Date,default:null},//结束时间
 
     ptype: {type:Number,default:3},//项目类型 0：科研项目，1：外包项目，2：geek创意，3：校园作品
 
@@ -51,7 +51,6 @@ var projectSchema=mongoose.Schema({//项目集合
 
 
 var skillSchema=mongoose.Schema({
-
 
     skname:{type:String},//技能名称
 
