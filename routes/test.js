@@ -12,6 +12,35 @@ var user = require("../method/user");
 var tools = require("../method/small");
 var config = require("../method/config");
 
+
+router.get("/:id/show",function(req,res){
+    if(req.params.id == "3" || req.params.id==3){
+       return req.flash('info',"aaa");
+    }
+    console.log(req.query);
+    console.log(req.params);
+    res.end();
+})
+router.get("/2temp/:id",function(req,res){
+    console.log("2temp  " + req.query.id);
+    tools.render_deal(null,res,null,"tmp");
+})
+router.delete("/2temp/:id",function(req,res){
+    console.log("del"+req.params.id);
+    tools.json_reply(null,res,"del")
+})
+
+router.post("/2temp/:id",function(req,res){
+    console.log("pst"+req.params.id);
+    tools.json_reply(null,res,"POST")
+})
+
+
+router.put("/2temp/:id",function(req,res){
+    console.log("put"+req.params.id);
+    tools.json_reply(null,res,"put")
+})
+
 router.get('/json',function(req,res){
     res.render('test',{});
 });
