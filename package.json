@@ -16,7 +16,8 @@
      "mongoose":"*",
       "express-session":"*",
       "connect-multiparty":"*",
-    "multer":"*"
+    "multer":"*"，
+    async:"*"
 
   }
 }

@@ -11,21 +11,14 @@ var config = require("../method/config");
 
 /* GET home page. */
 router.get('/', function(req, res) {
-    if(req.session.pass=="ok"){
         res.render('uindex', { title: 'user'});
-    }
-    res.render('uindex', { title: 'not login'});
 });
 router.get('/index', function(req, res) {
-    if(req.session.pass=="ok"){
         res.render('uindex', { title: 'user'});
-    }
-    res.render('uindex', { title: 'not login'});
 });
 
 //个人资料..
 router.get('/info',function(req,res){
-    if(req.session.pass=="ok"){
         userCl.getInfo(req.session.name,function(err,userone)
         {
             if (err) {
@@ -33,52 +26,38 @@ router.get('/info',function(req,res){
             }
             else res.render('info', {userone: userone});
         });
-    }else{
-        res.render('nologin');
-    }
 });
 
 //修改个人信息..
 router.get('/infoEdit',function(req,res){
-    if(req.session.pass=="ok"){
         userCl.getInfo(req.session.name,function(err,userone){
             if(err){res.render('error',{message:err})}
             else res.render('infoEdit',{userone:userone});
         });
-    }else{
-        res.render('nologin');
-    }
 });
-router.post('/infoEdit',function(req,res){
-    if(req.session.pass=="ok"){
-    var userId=req.body.mid;
+router.post('/infoEdit',function(req,res) {
+    var userId = req.body.mid;
     var userEmail = req.body.userEmail;
-    var userGrade=req.body.userGrade;
-    var userNickName=req.body.userNickName;
-    var _id=req.session._id;
-    userCl.infoEdit(_id,userId,userEmail,userGrade,userNickName,function(err){
-        if(err) res.render('error',{message:err});
-        else{ res.render("ok",{message:"更新成功.."});}
+    var userGrade = req.body.userGrade;
+    var userNickName = req.body.userNickName;
+    var _id = req.session._id;
+    userCl.infoEdit(_id, userId, userEmail, userGrade, userNickName, function (err) {
+        if (err) res.render('error', {message: err});
+        else {
+            res.render("ok", {message: "更新成功.."});
+        }
     });
-}else{
-        res.render('nologin');
-    }
 });
 //密码修改..
 router.get('/pswEdit',function(req,res){
-    if(req.session.pass=="ok"){
         userCl.getInfo(req.session.name,function(err,userone){
             if(err){res.render('error',{message:err})}
             else res.render('pswEdit',{userone:userone});
         });
-    }else{
-        res.render('nologin');
-    }
 });
 
 
 router.post('/pswEdit',function(req,res){
-    if(req.session.pass=="ok"){
         var oPwd=req.body.oPwd;
         var nPwd=req.body.nPwd;
         var _id=req.session._id;
@@ -86,9 +65,6 @@ router.post('/pswEdit',function(req,res){
            if(err){res.render('error',{message:err})}
            else res.render('ok',{message:"更新成功"});
        });
-    }else{
-        res.render('nologin');
-    }
 });
 //技能树编辑..
 router.get('/skillEdit',function(req,res){
@@ -113,9 +89,7 @@ router.get('/login', function(req, res) {
 });
 
 router.post("/login",function(req,res){
-    if(req.session.pass=="ok"){
-        res.render('index',{title:req.session.name});
-    }else{
+
         var username=req.body.username;
         var password=req.body.password;
         userCl.checkUser(username,password,function(err,_id){
@@ -129,7 +103,6 @@ router.post("/login",function(req,res){
             }
         });
 
-    }
 });
 
 //同道中人..
@@ -304,4 +277,5 @@ router.get('/logout',function(req,res){
 router.get("/aaa",function(req,res){
     res.render('bianjijinengshu',{});
 })
+
 module.exports = router;
