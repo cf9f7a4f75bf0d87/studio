@@ -12,7 +12,28 @@
     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
     <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
     <script type="text/javascript" src="/javascripts/bianjijinengshu.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            function skill_init(arr){
+                console.log(arr);
+                for(var i =0;i<arr.length;i++){
+                    var val = arr[i];
+                    var child = $('<span><input value="'+val+'" readonly><img class="del" src="/images/u53.png"></span>');
+                    $("#sel").append(child);
+                    $("#wei").find("input[value="+val+"]").parent().remove();
+                }
+            }
+            function str2arr(str){
+                if(str&&typeof(str)=="string"){
+                    return [str];
+                }
+                return str||[];
+            }
+            var skills = '<%=data.userSkills%>'.split(',');
+            skill_init2(function(){skill_init(str2arr(skills));});
 
+        })
+    </script>
 </head>
 
 <body>
@@ -52,15 +73,10 @@
             </div>
 
         <div>
-            <%
-            for(var j = 0;j<data.userSkills.length;j++){%>
-            <li>已有技能:<%=data.userSkills[j]%></li>
-            <%}%>
         </div>
         </div>
 
     </div>
 </div>
 </body>
-
 </html>

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+function skill_init2(callback){
 	$("#check input").hide();
 	$("#qd").show();
 	$("#check input").attr("checked",false);//选中的值s
@@ -18,7 +18,6 @@ $(document).ready(function() {
     $(document).on("click",".add",function(){
         var p = $(this).parent();
         var val = $(p).find("input").val();
-
         var child = $('<span><input value="'+val+'" readonly><img class="del" src="/images/u53.png"></span>');
         $("#sel").append(child);
         $(p).remove();
@@ -67,4 +66,5 @@ $(document).ready(function() {
             }
         })
     })
-});
+    callback();
+};

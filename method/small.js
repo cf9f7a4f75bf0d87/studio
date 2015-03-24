@@ -64,7 +64,7 @@ function return_data(err,data,close,callback){
     if(err){callback(err,null);}
     else{callback(null,data)}
     //这一行作为查看数据用.. 之后需要删除
-    console.log(err+ "( return_data  ) "+ data);
+    console.log(err+ "( return_data  ) "+ data + " isArray：" + isArray(data)    );
 }
 
 //封装数据库..
@@ -172,6 +172,11 @@ function skillsout(uid,sid,callback){
 /*
 定义数组函数
  */
+
+function isArray(object){
+    return object && typeof object==='object' &&
+        Array == object.constructor;
+}
 
 Array.prototype.each = function(fn){
     fn = fn || Function.K;

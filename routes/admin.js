@@ -1286,5 +1286,31 @@ router.get('/test',function(req,res){
     res.end();
 });
 
+/**
+ * 登录模块了。。
+ */
 
+router.get("/login",function(req,res){
+    res.render('login', { title: 'ADlogin'});
+})
+
+router.post("/login",function(req,res){
+    if(req.session.pass=="ad_ok"){
+        res.render('index',{title:req.session.name});
+    }else{
+        var username=req.body.username;
+        var password=req.body.password;
+        adminCl.checkUser(username,password,function(err,_id){
+            if(err) res.redirect("/admin/login?err="+err);
+            else{
+                req.session.name=username;
+                req.session._id=_id;
+                req.session.pass="ad_ok";
+                req.session.control = true;
+                res.render('uindex',{uname:username})
+            }
+        });
+
+    }
+})
 module.exports = router;

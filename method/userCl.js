@@ -12,33 +12,20 @@ var tools=require("./small");
 var config = require("./config");
 //用户登录验证函数..
 function checkUser(username,password,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function(){
-       // console.log('mongodb is open..'+username);
-
+  tools.odb(function(close){
         user.findOne({uname:username},'upwd',function(err,user){
-            if(err) return callback(err);
+            close();
+            if(err){callback(err,null);}
             if(user==null){
-                db.close();
-                return callback('no this user..');
+                callback('no this user..',null);
             }else{
                 console.log('user password is ..'+user.upwd);
                 if(password!=user.upwd){
-                    db.close();
-                 return callback('password is wrong..');
+                    callback('password is wrong..',null);
                 }else{
-                    console.log('ok, Login..');
-                    db.close();
                     callback(null,user._id);
-
                 }
             }
-
-
         })
     });
 }
@@ -222,7 +209,11 @@ function getSkill(_id,callback){
 function userskill(_id,callback){
     tools.odb(function(close){
         user.findOne({_id: _id}).populate('uskills',"skname -_id").exec(function (err, data) {
-           tools.return_data(err,data.uskills||null,close,callback);
+            console.log(data.uskills);
+            var skills = tools.str2arr(data.uskills);
+            skills = skills?(skills.each(function(o){return o.skname})):[];
+            console.log(skills);
+           tools.return_data(err,skills,close,callback);
         });
     })
 }
@@ -326,19 +317,14 @@ function skillsdel(del,uid,callback){
  */
 function joinGroup(username,groupId,content,callback){
 
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-     console.log(groupId+"groupid..");
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function() {
-       user.findOne({uname: username}, function (err, userone) {
+    tools.odb(function(close){
+        user.findOne({uname: username}, function (err, userone) {
             if (err) {db.close();callback(err)}
             else if (userone == null) {
-                db.close();
+               close();
                 callback(null,"no this user");
             } else if (userone.ugroupId != null) {
-                db.close();
+                close();
                 callback(null,'you have a group');
             } else {
                 //var gid=mongoose.Types.ObjectId(groupId);//这个如果是用 自身转换为自身转化赋值的话,会出错..记住咯.
@@ -347,11 +333,11 @@ function joinGroup(username,groupId,content,callback){
                 var uid=mongoose.Types.ObjectId(userone._id);
                 console.log(uid);
                studio.update({sname:"RoseOffice"},{$push:{joinMessages:{uid:uid,uname:userone.uname,uemail:userone.uemail,mcontent:content,gid:groupId}}},function(err,num){
-                   db.close();
-                   if(err) return  callback(err,0);
+                   close();
+                   if(err)   callback(err,0);
                    else{
                       console.log(num);
-                      return callback(null,num);
+                      callback(null,num);
                   }
                });
 

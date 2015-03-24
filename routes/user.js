@@ -50,7 +50,6 @@ router.get('/infoEdit',function(req,res){
     }
 });
 router.post('/infoEdit',function(req,res){
-    console.log('get infoedit request..');
     if(req.session.pass=="ok"){
     var userId=req.body.mid;
     var userEmail = req.body.userEmail;
@@ -93,7 +92,6 @@ router.post('/pswEdit',function(req,res){
 });
 //技能树编辑..
 router.get('/skillEdit',function(req,res){
-    console.log(">>>>>"+config.skill_name);
     userCl.userskill(req.session._id,function(err,data){tools.render_deal(err,res,{allSkills:config.skill_name,userSkills:data},"skillEdit")})
 });
 
@@ -121,11 +119,12 @@ router.post("/login",function(req,res){
         var username=req.body.username;
         var password=req.body.password;
         userCl.checkUser(username,password,function(err,_id){
-            if(err) res.redirect("login?err="+err);
+            if(err) res.redirect("/user/login?err="+err);
             else{
                 req.session.name=username;
                 req.session._id=_id;
-                req.session.pass="ok";
+                req.session.pass="user_ok";
+                req.session.control = true;
                 res.render('uindex',{uname:username})
             }
         });

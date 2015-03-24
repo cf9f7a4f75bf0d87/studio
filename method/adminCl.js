@@ -2384,6 +2384,34 @@ function findPeople(skills,group,grade,name,callback) {
         }
     });
 }
+
+/**
+ * 登录
+ * @param username
+ * @param password
+ * @param callback
+ */
+function checkUser(username,password,callback){
+    tools.odb(function(close){
+        user.findOne({uname:username},'upwd',function(err,user){
+            close();
+            if(err){callback(err,null);}
+            if(user==null){
+                callback('no this user..',null);
+            }else{
+                console.log('user password is ..'+user.upwd);
+                if(password!=user.upwd){
+                    callback('password is wrong..',null);
+                }else{
+                    if(user.roll==0||user.roll=="0"||user.roll=="1"||user.roll==1){
+                        callback(null,user._id);
+                    }
+                        callback("not admin..",null);
+                }
+            }
+        })
+    });
+}
 exports.adminData=adminData;
 exports.adminTip=adminTip;
 exports.adminMsg=adminMsg;
@@ -2466,3 +2494,6 @@ exports.addproject            = addproject;
 exports.editproject           = editproject;
 exports.endproject            = endproject;
 exports.delproject            = delproject;
+
+//登录验证
+exports.checkUser             = checkUser;

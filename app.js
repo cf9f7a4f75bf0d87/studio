@@ -52,15 +52,36 @@ app.use(bodyParser({
 }))
 
 
-////login control.
-//app.use(function(req,res,next){
-//    var pass = req.session.pass;
-//    var url=req.originalUrl;
-//    if(pass!="ok"&&url!="/user/login"){
-//        return res.redirect('/user/login')
-//    }
-//    next();
-//})
+//login control.
+app.use(function(req,res,next){
+    var pass = req.session.pass;
+    var url=req.originalUrl;
+    console.log(req.session.control);
+    console.log(url);
+    if(!req.session.control &&(url!="/user/login"&&url!="/admin/login")){
+         res.redirect('/user/login')
+    }else{
+        next();
+    }
+
+})
+
+//visit control
+app.use(function(req,res,next){
+    var control = req.session.control;
+    var pass =req.session.pass;
+    var url = req.originalUrl;
+    var admin = /^\/admin*/;
+    var user = /^\/user*/;
+    if(req.session.control){
+        if(admin.test(url)&&pass=="ad_ok"){next();}
+        else if(user.test(url)&&pass=="user_ok"){next();}
+        else {
+            res.redirect("/user/login");
+        }}
+    else{next();}
+
+})
 app.use('/', routes);
 app.use('/users', users);
 app.use('/user',user);

@@ -8,7 +8,6 @@ var test = require('../method/test');
 var service = require('../method/service');
 var adminCl = require("../method/adminCl");
 var user = require("../method/user");
-//var formidable = require("formidable");
 var tools = require("../method/small");
 var config = require("../method/config");
 
