@@ -58,8 +58,11 @@ app.use(function(req,res,next){
     var url=req.originalUrl;
     console.log(req.session.control);
     console.log(url);
-    if(!req.session.control &&(url!="/user/login"&&url!="/admin/login")){
-         res.redirect('/user/login')
+    var admin = /^\/admin\/login*/;
+    var user = /^\/user\/login*/;
+    if(!req.session.control &&(user.test(url)&&admin.test(url))){
+        res.writeHead(302,{'Location':'/user/login'});
+        res.end();
     }else{
         next();
     }
@@ -77,7 +80,8 @@ app.use(function(req,res,next){
         if(admin.test(url)&&pass=="ad_ok"){next();}
         else if(user.test(url)&&pass=="user_ok"){next();}
         else {
-            res.redirect("/user/login");
+            res.writeHead(302,{'Location':'/user/login'});
+            res.end();
         }}
     else{next();}
 

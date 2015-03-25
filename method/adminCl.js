@@ -2393,7 +2393,8 @@ function findPeople(skills,group,grade,name,callback) {
  */
 function checkUser(username,password,callback){
     tools.odb(function(close){
-        user.findOne({uname:username},'upwd',function(err,user){
+        user.findOne({uname:username},'upwd uroll',function(err,user){
+            console.log(user);
             close();
             if(err){callback(err,null);}
             if(user==null){
@@ -2403,10 +2404,11 @@ function checkUser(username,password,callback){
                 if(password!=user.upwd){
                     callback('password is wrong..',null);
                 }else{
-                    if(user.roll==0||user.roll=="0"||user.roll=="1"||user.roll==1){
+                    if(user.uroll==0||user.uroll=="0"||user.uroll=="1"||user.uroll==1){
                         callback(null,user._id);
-                    }
+                    }else{
                         callback("not admin..",null);
+                    }
                 }
             }
         })

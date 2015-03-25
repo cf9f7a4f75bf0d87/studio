@@ -1227,7 +1227,7 @@ router.post("/people/find",function(req,res){
 })
 
 router.get('/index', function(req, res) {
-    res.render('aindex', { title: 'admin'});
+    res.redirect("/admin/");
 });
 
 
@@ -1281,7 +1281,6 @@ router.get('/test',function(req,res){
 //    })
     adminCl.findPeople(sname,["5437cc4eaa84a5141a2853cb"],"5437c5fe229fe3981c6135e5","13","user",function(err,data){
         console.log(err+ " *** " + data.length);
-        console.log("***********");
     });
     res.end();
 });
@@ -1296,7 +1295,7 @@ router.get("/login",function(req,res){
 
 router.post("/login",function(req,res){
     if(req.session.pass=="ad_ok"){
-        res.render('index',{title:req.session.name});
+        res.render('aindex',{title:req.session.name});
     }else{
         var username=req.body.username;
         var password=req.body.password;
@@ -1307,7 +1306,7 @@ router.post("/login",function(req,res){
                 req.session._id=_id;
                 req.session.pass="ad_ok";
                 req.session.control = true;
-                res.render('uindex',{uname:username})
+                res.redirect("/admin/")
             }
         });
 
