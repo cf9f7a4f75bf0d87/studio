@@ -23,19 +23,17 @@
 <%- include top %>
 <%- include header %>
 <%- include nav%>
-<%- include leftnav%>
+<%- include aleftnav%>
 
 
 <div class="contentnav">
       <span>
-        <a href="/">螺丝工作室后台管理 ></a>
-        <a href="/b_1fabu">发布 ></a>
-        <a href="#">团队介绍</a>
+          <a href="/admin/">螺丝工作室后台管理 ></a>
+          <a href="/admin/Sendout">发布</a>
+          <a href="#">团队介绍=。=</a>
+
       </span>
 </div>
-
-
-
 
 <div id="a">
     <h> 团队介绍</h>
@@ -135,7 +133,7 @@
              for( var i=0;i<data.sculture.length;i++){
                  %>
         <div class="div2">
-            <span  class="t0"><%=data.sculture[i]._id%></span>
+            <span  class="t0" hidden><%=data.sculture[i]._id%></span>
             <span class="t1"><%=data.sculture[i].cname%></span>
             <span >更新日期:</span><span class="t2"><%=data.sculture[i].ctime.toLocaleDateString()%></span>
             <input type="image" class="text_edit" value="修改">
@@ -151,7 +149,7 @@
          }
         %>
         <div id="t_new">
-            <input type="hidden" class="t0_x">
+            <input type="hidden" class="t0_x" hidden>
             <input class="t1_x">
             <span hidden>更新日期:</span><input hidden class="t2_x"></span>
             <input type="image" class="text_queren" value="确定">
@@ -168,7 +166,6 @@
             <span >更新日期:</span><span class="t2"></span>
             <input type="image" class="text_edit" value="修改">
             </br>
-
             <div class="t3">
 
             </div>

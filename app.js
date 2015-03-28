@@ -54,37 +54,42 @@ app.use(bodyParser({
 
 //login control.
 app.use(function(req,res,next){
-    var pass = req.session.pass;
     var url=req.originalUrl;
-    console.log(req.session.control);
     console.log(url);
     var admin = /^\/admin\/login*/;
     var user = /^\/user\/login*/;
-    if(!req.session.control &&(user.test(url)&&admin.test(url))){
-        res.writeHead(302,{'Location':'/user/login'});
-        res.end();
-    }else{
+    var upload = /^\/test\/uploads*/;
+    if(req.session.control||false||upload.test(url)){
         next();
     }
-
+    else if( user.test(url)||admin.test(url)){next();}
+    else {
+        res.writeHead(302,{'Location':'/user/login'});
+        res.end();
+    }
 })
 
 //visit control
 app.use(function(req,res,next){
-    var control = req.session.control;
     var pass =req.session.pass;
     var url = req.originalUrl;
     var admin = /^\/admin*/;
     var user = /^\/user*/;
-    if(req.session.control){
-        if(admin.test(url)&&pass=="ad_ok"){next();}
-        else if(user.test(url)&&pass=="user_ok"){next();}
-        else {
-            res.writeHead(302,{'Location':'/user/login'});
-            res.end();
-        }}
-    else{next();}
 
+    if(req.session.control||false) {
+        if (admin.test(url) && pass == "ad_ok") {
+            next();
+        }
+        else if (user.test(url) && pass == "user_ok") {
+            next();
+        }
+        else {
+            res.writeHead(302, {'Location': '/user/login'});
+            res.end();
+        }
+    }else{
+        next();
+    }
 })
 app.use('/', routes);
 app.use('/users', users);

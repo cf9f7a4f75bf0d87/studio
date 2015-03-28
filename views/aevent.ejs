@@ -21,17 +21,15 @@
 <%- include top %>
 <%- include header %>
 <%- include nav%>
-<%- include leftnav%>
+<%- include aleftnav%>
 
 <div class="contentnav">
 		      <span>
-		        <a href="//">螺丝工作室后台管理 ></a>
-		        <a href="/b_1fabu">发布 ></a>
-		        <a href="#">大事件发布</a>
+		          <a href="/admin/">螺丝工作室后台管理 ></a>
+                  <a href="/admin/Sendout">发布</a>
+                  <a href="#">大事件发布</a>
 		      </span>
 </div>
-
-
 
 <div id="a">
     <h>大事件发布</h>
@@ -64,7 +62,6 @@
                     <div class="div4"> <img src="/images/add.png" class="img add_img"> </div>
                 </div>
                 <!-- 图片 -->
-                <%=data[i].epics.length%>
                 <% for(var j=0;j<data[i].epics.length;j++){%>
                 <div class="div4" >
                     <div class="div_shanchu_img"> <input  type="image"  class="shanchu_img"   src="/images/u53.png"></div>

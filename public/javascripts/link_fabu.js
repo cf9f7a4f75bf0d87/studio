@@ -11,13 +11,13 @@ window.onload=function(){
        lna[6].innerText="项目发布"; 
 
 
-       lna[0].setAttribute("href","b_2tuanduijieshao");
-       lna[1].setAttribute("href","b_3zuzhixinxifabu");
-       lna[2].setAttribute("href","b_4xinwenfabu");
-       lna[3].setAttribute("href","b_5dashijianfabu");
-       lna[4].setAttribute("href","b_6chengguozhanshifabu");
-       lna[5].setAttribute("href","b_7bangyangfabu");
-       lna[6].setAttribute("href","b_8xiangmufabu");
+       lna[0].setAttribute("href","/admin/sendout/teaminfo");
+       lna[1].setAttribute("href","/admin/sendout/teaminfos");
+       lna[2].setAttribute("href","/admin/sendout/news");
+       lna[3].setAttribute("href","/admin/sendout/events");
+       lna[4].setAttribute("href","/admin/sendout/achievements");
+       lna[5].setAttribute("href","/admin/sendout/examples");
+       lna[6].setAttribute("href","/admin/sendout/projects");
       
  
 }

@@ -43,7 +43,6 @@ router.get('/tip',function(req,res){
           res.render('error',{message:err});
       }
       else{
-          console.log("tip(((((((((((((((((((((");
           res.render('atip',{data:data});
       }
   })
@@ -922,7 +921,7 @@ router.post('/sendout/delCulture',function(req,res){
  * 组织信息发布..
  * 需要设计数据库..
  */
-router.get('/sendout/msgSendout',function(req,res){
+router.get('/sendout/teaminfos',function(req,res){
     //var sname=req.session.sname;
     var sname="RoseOffice";
 

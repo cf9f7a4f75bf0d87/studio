@@ -7,10 +7,10 @@ window.onload=function(){
        lna[3].innerText="项目申请";
       // lna[4].innerText=""; 
 
-       lna[0].setAttribute("href","/a_2youkeliuyan");
-       lna[1].setAttribute("href","/a_3chengyuanfankui");
-       lna[2].setAttribute("href","/a_4jiarushenqing");
-       lna[3].setAttribute("href","/a_5xiangmushenqing");
+       lna[0].setAttribute("href","/admin/tip/leaveMsg");
+       lna[1].setAttribute("href","/admin/tip/feedback");
+       lna[2].setAttribute("href","/admin/tip/joinMsg");
+       lna[3].setAttribute("href","/admin/tip/projectMsg");
 
  
 }

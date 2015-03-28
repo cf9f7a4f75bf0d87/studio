@@ -1,6 +1,27 @@
-<%-include theader %>
-<% include theader%>
-<link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+    <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/index.css">
+    <script type="text/javascript">
+        window.onload=function(){
+
+            var ln = document.getElementById('leftnav');
+            var lna = ln.getElementsByTagName('a');
+            lna[0].innerText="通知";
+            lna[1].innerText="发布";
+            lna[2].innerText="人员";
+
+            lna[0].setAttribute("href","/admin/tip/");
+            lna[1].setAttribute("href","/admin/sendout/");
+            lna[2].setAttribute("href","/admin/people/");
+        }
+
+    </script>
 </head>
 <body>
 <%- include top %>
