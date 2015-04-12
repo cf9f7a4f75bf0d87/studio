@@ -29,24 +29,23 @@
 </head>
 
 <body>
-<%- include top %>
-<%- include header %>
-<%- include nav%>
-<%- include leftnav%>
+<%- include atop %>
+<%- include aheader %>
+<%- include anav%>
+<%- include aleftnav%>
 
 
 <div class="contentnav">
       <span>
-        <a href="/">螺丝工作室后台管理 ></a>
-        <a href="/c_1renyuan">人员</a>
-        <a href="#"></a>
+        <a href="/admin/">螺丝工作室后台管理 ></a>
+        <a href="/admin/people">人员</a>
+        <a href="就是这里=.=">#</a>
       </span>
 </div>
 
 <div id="a">
     <div id="b">
         <p id="h1">数据统计</p>
-
          <ul>
             <% if(typeof(data)=="object"&&data.length>0){%>
            <%for(var i=0;i<data.length;i++){%>

@@ -31,8 +31,6 @@ $(document).ready(function(){
 															//点击保存，保存编辑过的信息
         $(document).on('click',".queren",function()
 		{
-			
-			
 			var tuandui_x = $("#tuandui_x").val();
 			var fuzeren_x = $("#fuzeren_x").val();
 			var laoshi_x = $("#laoshi_x").val();
@@ -81,7 +79,6 @@ $(document).ready(function(){
              var t1=$(p1).find(".t1").html();
              var t3=$(p1).find(".t3").html();
 
-              alert(t0 + "  " + t1 + " " +t2 + "  " + t3 );
 	      	 var p2= $("#t_new").clone(true);
 	      	 p2.insertBefore( $(p1) ).show();
 
@@ -133,7 +130,6 @@ $(document).ready(function(){
         var t2 = new Date().toLocaleDateString();
         var t1 = $(p1).find(".t1_x").val();
         var t3 = $(p1).find(".t3_x").val();
-        alert("add culture..");
         $.ajax({
             url: "addCulture",
             type: "post",
@@ -174,8 +170,6 @@ $(document).ready(function(){
       	function()
       	{
       		$(".file").click();
-      		
-
       	});
 
 });

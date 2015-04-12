@@ -24,33 +24,8 @@ function checkUser(username,password,callback){
                     callback('password is wrong..',null);
                 }else{
                     callback(null,user._id);
-                }
-            }
-        })
-    });
-}
-//function checkUser(username,password,callback){
-//
-//        user.findOne({uname:username},'upwd',function(err,user){
-//            if(err) return callback(err);
-//            if(user==null){
-//              //  db.close();
-//                return callback('no this user..');
-//            }else{
-//                console.log('user password is ..'+user.upwd);
-//                if(password!=user.upwd){
-//
-//                  //  db.close();
-//                    return callback('password is wrong..');
-//                }else{
-//                    console.log('ok, Login..');
-//                  //  db.close();
-//                    callback(null,user._id);
-//                }
-//            }
-//        })
-//
-//}
+                }}})});}
+
 /**
  * 获取用户信息..
  * @param req
@@ -59,28 +34,10 @@ function checkUser(username,password,callback){
  * @param route  信息发送路径..
  */
 function getInfo(username,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function(){
-        console.log('mongodb is open..'+username);
-
+    tools.odb(function(close){
         user.findOne({uname:username},function(err,user){
-            if(err)  callback(err);
-            if(user==null){
-                db.close();
-                callback("not find your info..",null);
-            }else{
-                db.close();
-                callback(null,user)
-            }
-        });
-    });
-}
-
-
+           tools.return_data(err,user,close,callback);
+        });})};
 //
 //function getInfo(username,callback){
 //        user.findOne({uname:username},function(err,user){
@@ -106,9 +63,7 @@ function groupInfo(callback){
   tools.odb(function(close) {
       groups.find({}, "gname _id", function (err, data) {
          tools.return_data(err,data,close,callback);
-      });
-  });
-}
+      });});}
 
 /**
  * 获取所有技能..
@@ -133,62 +88,28 @@ function groupInfo(callback){
  */
 function infoEdit(_id,userId,userEmail,userGrade,userNickName,callback){
 
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function(){
-        console.log('mongodb is open..');
+    tools.odb(function(close){
             console.log(_id+"   " + userEmail + "   " + userId);
-        user.update({_id:_id},{$set:{uid:userId,uGrade:userGrade,uEmail:userEmail,unickName:userNickName}},function(err,numAffected,raw){
-            if(err) {console.log(err);
-                callback(err);}
-            if(numAffected==0){
-                db.close();
-                callback("未更新成功..");
-            }else{
-                db.close();
-                callback(null);
-            }
-        });
-
-    });
-}
+        user.update({_id:_id},{$set:{uid:userId,uGrade:userGrade,uEmail:userEmail,unickName:userNickName}},function(err,num){
+           tools.update_deal(close,err,num,callback);
+        });});}
 /**
  * 更改密码..
- * @param req
- * @param res
+ * @param _id
+ * @param oPwd
+ * @param nPwd
+ * @param callback
  */
 function pwdEdit(_id,oPwd,nPwd,callback){
-    mongoose.connect("mongodb://localhost/studio");
-    var db=mongoose.connection;
-
-    db.on('error',console.error.bind(console,'connection error:******'));
-
-    db.once('open',function(){
-        console.log('mongodb is open..');
-
+    tools.odb(function(close){
         user.findOne({_id:_id,upwd:oPwd},function(err,userone){
-            if(err) callback(err);
-           else if( userone == null){
-                db.close();
+            if(err || userone == null){
+                close();
                callback("your password is not correct..");
             }else{
-                user.update({uid:userone.uid},{$set:{upwd:nPwd}},function(err,numAffected,raw){
-                    if(err) callback(err,null);
-                    else if(numAffected == 0){
-                        db.close();
-                       callback("未更新成功..");
-                    }else{
-                        db.close();
-                        callback(null);
-                    }
-                })
-            }
-        });
-    });
-}
+                user.update({uid:userone.uid},{$set:{upwd:nPwd}},function(err,num){
+                    tools.update_deal(close,err,num,callback);
+                })}});});}
 
 function getSkill(_id,callback){
 
@@ -197,9 +118,7 @@ function getSkill(_id,callback){
             else {
                 if(docs==null) callback("not find..",null);
                 callback(null, data);
-            }
-        });
-}
+            }});}
 
 /**
  * 获取用户的技能
@@ -214,9 +133,7 @@ function userskill(_id,callback){
             skills = skills?(skills.each(function(o){return o.skname})):[];
             console.log(skills);
            tools.return_data(err,skills,close,callback);
-        });
-    })
-}
+        });})}
 ///**
 // * 编辑技能树.. 不再使用
 // * @param req
@@ -247,10 +164,7 @@ function skilladd(skill,callback){
             close();
             config.skill_n2i_init(function(){
                 callback(err);
-            })
-        })
-    })
-}
+            })})})}
 /**
  * 求出新增技能,加入技能列表中;减少的技能,从列表中移除
  */
@@ -271,14 +185,7 @@ function skilledit(uid,skills,callback){
                             var skills_id = skills.uniquelize().each(function(o){return config.skill_n2i[o];});
                            user.update({_id:uid},{$set:{uskills:skills_id}},function(err,num){
                                tools.update_deal(close,err,num,callback);
-                           })
-                        }
-                    })
-                }
-            });
-        });
-    })
-}
+                           })}})}});});})}
 
 function skillsadd(add,uid,callback){
     if(add.length>0){
@@ -291,8 +198,7 @@ function skillsadd(add,uid,callback){
         //当遍历完毕时 调用回调函数,
         //未保存出错信息, 以后改进
         callback(null);
-    }
-}
+    }}
 
 
 function skillsdel(del,uid,callback){
@@ -306,8 +212,7 @@ function skillsdel(del,uid,callback){
         //当遍历完毕时 调用回调函数,
         //未保存出错信息, 以后改进
         callback(null);
-    }
-}
+    }}
 /**
  * 加入创新组
  * @param username 用户名
@@ -338,99 +243,84 @@ function joinGroup(username,groupId,content,callback){
                    else{
                       console.log(num);
                       callback(null,num);
-                  }
-               });
-
-            }
-        });
-    });
-}
-/**
- * old 废弃..
- * 找出技能相似的人..(貌似只要名字就行)..
- * @param req
- * @param res
- * 思路: 通过用户的技能id数组,找出对应的技能
- * 对于每一个技能,找出其用户组
- * 遍历每一个用户组,把他们的名字存到数组中
- * 将技能名和对应姓名组打包压入data数组..
- * 最后将data数组发给ejs..
- */
-function findSameSkillUser(req,res) {
-    var username = req.session.name;
-    //var username="user1";
-    mongoose.connect("mongodb://localhost/studio");
-    var db = mongoose.connection;
-    console.log("find username "+username);
-    db.on('error', console.error.bind(console, 'connection error:******'));
-
-    db.once('open', function () {
-        console.log('mongodb is open..' + username);
-    //    wrap = function(param,cb){
-     //       cbb()
-    //    }
-        user.findOne({uname: username}, function (err, userone) {
-            if (err) return handleError(err);
-            if (userone == null) {
-                db.close();
-                res.render('error', {message: "not find your info.."});
-            }else {
-                //通过技能id找到技能所有者的id
-                console.log(userone.uskills);
-                skills.find({}).where('ID').in(userone.uskills).select('-_id skowners skname').exec(function (err, msg) {
-                    console.log("技能知道的同学" + msg+"  err:"+err);
-                    var query=[];//查询语句数组
-
-                    var data=[];//数据数组..{技能名,[玩家名]}
-                    var names=[];//暂存用户名..数组
-                    msg.forEach(function(one){
-                        query="{'ID':{$in:["+one.skowners+"]}}";
-                        console.log("owner******"+query);
-
-//                        user.find({}).where('ID').in("["+one.skowners+"]").select('-_id uname').exec(function(err,docs){
-                        user.find({}).or([query]).select('-_id uname').exec(function(err,docs){
-                            console.log(err + "              "+docs);
-                            docs.forEach(function(doc){
-                                names.push(doc.uname);
-                               // console.log(doc.uname);
-                            });
-                            data.push({skname:one.skname,names:names});
-                            names=[];
-                            console.log(data.length);
-                            if(data.length==msg.length){
-                                db.close();
-                                res.render('skillSame',{data:data});
-                            }
-
-                        });
-
-                        //@原计划,所有一次查找..所以组合了字符串..
-                       // queryArray.push("{'ID':{$in:["+one.skowners+"]}}");
-                    });
-
-
-//                    //@
-//                    var query=queryArray.join(',');
-//                    console.log(query);
-//                    user.find().or([query]).select('uname -_id').exec(function(err,docs){
-//                        console.log(err+"    "+docs);
-//                        var nameArray=[];
-//                        docs.forEach(function(e){
-//                            nameArray.push(e.uname);
-//                        });
+                  }});}});});}
+///**
+// * old 废弃..
+// * 找出技能相似的人..(貌似只要名字就行)..
+// * @param req
+// * @param res
+// * 思路: 通过用户的技能id数组,找出对应的技能
+// * 对于每一个技能,找出其用户组
+// * 遍历每一个用户组,把他们的名字存到数组中
+// * 将技能名和对应姓名组打包压入data数组..
+// * 最后将data数组发给ejs..
+// */
+//function findSameSkillUser(req,res) {
+//    var username = req.session.name;
+//    mongoose.connect("mongodb://localhost/studio");
+//    var db = mongoose.connection;
+//    console.log("find username "+username);
+//    db.on('error', console.error.bind(console, 'connection error:******'));
 //
-//                        db.close();
-//                        res.render('skillSame',{names:nameArray});
-                    });
-
-
-              //  });
-                // res.render(route,{userone:user});
-            }
-
-        });
-    });
-}
+//    db.once('open', function () {
+//        console.log('mongodb is open..' + username);
+//    //    wrap = function(param,cb){
+//     //       cbb()
+//    //    }
+//        user.findOne({uname: username}, function (err, userone) {
+//            if (err) return handleError(err);
+//            if (userone == null) {
+//                db.close();
+//                res.render('error', {message: "not find your info.."});
+//            }else {
+//                //通过技能id找到技能所有者的id
+//                console.log(userone.uskills);
+//                skills.find({}).where('ID').in(userone.uskills).select('-_id skowners skname').exec(function (err, msg) {
+//                    console.log("技能知道的同学" + msg+"  err:"+err);
+//                    var query=[];//查询语句数组
+//
+//                    var data=[];//数据数组..{技能名,[玩家名]}
+//                    var names=[];//暂存用户名..数组
+//                    msg.forEach(function(one){
+//                        query="{'ID':{$in:["+one.skowners+"]}}";
+//                        console.log("owner******"+query);
+//
+////                        user.find({}).where('ID').in("["+one.skowners+"]").select('-_id uname').exec(function(err,docs){
+//                        user.find({}).or([query]).select('-_id uname').exec(function(err,docs){
+//                            console.log(err + "              "+docs);
+//                            docs.forEach(function(doc){
+//                                names.push(doc.uname);
+//                               // console.log(doc.uname);
+//                            });
+//                            data.push({skname:one.skname,names:names});
+//                            names=[];
+//                            console.log(data.length);
+//                            if(data.length==msg.length){
+//                                db.close();
+//                                res.render('skillSame',{data:data});}});
+//
+//                        //@原计划,所有一次查找..所以组合了字符串..
+//                       // queryArray.push("{'ID':{$in:["+one.skowners+"]}}");
+//                    });
+//
+//
+////                    //@
+////                    var query=queryArray.join(',');
+////                    console.log(query);
+////                    user.find().or([query]).select('uname -_id').exec(function(err,docs){
+////                        console.log(err+"    "+docs);
+////                        var nameArray=[];
+////                        docs.forEach(function(e){
+////                            nameArray.push(e.uname);
+////                        });
+////
+////                        db.close();
+////                        res.render('skillSame',{names:nameArray});});
+//
+//
+//              //  });
+//                // res.render(route,{userone:user});}});
+//                // });}
 /**
  * 新版本 志同道合..1117 搞了一下午,我擦,就数据库写错了..
  * @param uid
@@ -441,9 +331,7 @@ function findSameSkillUsers(uid,callback){
        // skills.find({skowners:id},"skname -_id skowners",function(err,docs){
        skills.find({skowners:uid},{skowners:1,skname:1}).populate("skowners","uname",'user',null,{multi:true}).exec(function(err,data){
            tools.return_data(err, data, close, callback);
-       });
-   });
-}
+       });});}
 /**
  * 用户项目信息..
  * @param username
@@ -471,11 +359,7 @@ function userProjectInfo(username,callback){
                         data.pTaking = userone.uprojectsTaking.length;
                         data.pGoing = docs;
                         callback(null, data);
-                    });
-                }
-            });
-        });
-}
+                    });}});});}
 /**
  * 我的项目..  原始版本
  * @param req
@@ -529,9 +413,7 @@ function projectsMy(uname,uid,callback){
        var id=mongoose.Types.ObjectId(uid);
         projects.find({$or:[{pleader:id},{pmembers:id}]}).populate("pleader","uname -_id","user",null).populate("pmembers","uname -_id","user",null).exec(function(err,data){
          tools.return_data(err,data,close,callback);
-        })
-    });
-}
+        })});}
 
 //通过状态查找我的项目
 //招募中, 进行中,已完成,已死..
@@ -540,9 +422,7 @@ function projectsClass(uid,cls,callback){
        var id = mongoose.Types.ObjectId(uid);
         projects.find({$or:[{pleader:id},{pmembers:id}],pstaute:cls}).populate("pleader","uname -_id","user",null).populate("pmembers","uname -_id","user",null).exec(function(err,data){
            tools.return_data(err,data,close,callback);
-        })
-    });
-}
+        })});}
 /*
     用户未审核的项目
  */
@@ -550,9 +430,7 @@ function projectsnotcheck(uid,callback){
     tools.odb(function(close){
         user.findOne({_id:uid}).populate("uprojectsAsked").exec(function(err,data){
             tools.return_data(err,(data?data.uprojectsAsked||null:null),close,callback);
-        })
-    })
-}
+        })})}
 
 
 function findmyprojects(uid,status,callback){
@@ -571,8 +449,7 @@ function findmyprojects(uid,status,callback){
             break;
         default :
             callback("not found..",null);
-    }
-}
+    }}
 
 /*
 退出未审核的项目
@@ -586,13 +463,7 @@ function quitmyproject(uid,pid,callback){
             else{
                 projects.update({_id:pid},{$pull:{pmembers:uid}},function(err,num){console.log("( quit my project ) "+ err + "<<num  " + num );
                     studio.update({},{$pull:{sprojectMessages:{uid:uid,pid:pid}}},function(err,num){console.log("( quit my project ) "+ err + "<<num  " + num );
-                        user.update({_id:uid},{$pull:{uprojectsAsked:pid}},function(err,num){tools.update_deal(close,err,num,callback)});
-                    })
-                })
-            }
-        })
-    })
-}
+                        user.update({_id:uid},{$pull:{uprojectsAsked:pid}},function(err,num){tools.update_deal(close,err,num,callback)});})})}})})}
 
 //退出项目..
 function projectQuit(uid,pid,content,callback){
@@ -606,10 +477,7 @@ function projectQuit(uid,pid,content,callback){
         studio.update({},{$push:{qProjects:{user:id,project:pid,content:content}}},function(err,num){
             db.close();
             if(err||num!=1){callback(err)}
-            else{callback(null)}
-        })
-    });
-}
+            else{callback(null)}})});}
 /**
  * 获取正在找人的项目列表
  * @param ptype 项目类型
@@ -649,14 +517,7 @@ function projectsList(ptype,callback){
                           if(data.length==docs.length){
                               db.close();
                               callback(null,data);
-                          }
-                      }
-                  });
-              });
-          }
-       });
-    });
-}
+                          }}});});}});});}
 
 /**
  * 新版--项目列表(正在招募中)
@@ -672,10 +533,7 @@ function projectsLists(ptype,callback){
         }else{
             projects.find({pstaute:0,ptype:ptype}).populate('pleader','uname -_id','user',null).populate('pmembers','uname -_id',"user",null).exec(function(err,docs){
                 tools.return_data(err,data,close,callback);
-            });
-        }
-    });
-}
+            });}});}
 
 /**
  * 加入项目--   传入 个人和项目id,申请说明..
@@ -695,8 +553,7 @@ function joinProjects(userid,pid,content,callback){
                       studio.update({sname:"RoseOffice"},{$push:{sprojectMessages:{uid:userone._id,uname:userone.uname,uemail:userone.uemail,mcontent:content,pid:pid}}},function(err,num){
                           tools.update_deal(close,err,num,callback);
 
-                   });})})});})});
-}
+                   });})})});})});}
 /**
  * 用户发送反馈消息..
  * @param username 用户名
@@ -726,13 +583,7 @@ function sendFeedBack(username,content,callback){
                     if(err) callback(err,0);
                     else{
                          callback(null,num);
-                    }
-                });
-
-            }
-        });
-    });
-}
+                    }});}});});}
 
 
 function leaveMsg(uname,email,content,callback){
@@ -744,10 +595,7 @@ function leaveMsg(uname,email,content,callback){
             db.close();
             console.log(err + "  " + num);
             callback(null);
-        })
-    })
-
-}
+        })})}
 function logout(session){
     session.destroy();
 }
@@ -757,9 +605,7 @@ exports.getInfo=getInfo;
 exports.infoEdit=infoEdit;
 exports.pwdEdit=pwdEdit;
 exports.joinGroup=joinGroup;
-exports.findSameSkillUser=findSameSkillUser;
 exports.userProjectInfo=userProjectInfo;
-//exports.projectMy=projectMy;
 exports.projectsList=projectsList;
 exports.sendFeedBack=sendFeedBack;
 

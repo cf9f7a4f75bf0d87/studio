@@ -75,8 +75,11 @@ app.use(function(req,res,next){
     var url = req.originalUrl;
     var admin = /^\/admin*/;
     var user = /^\/user*/;
-
-    if(req.session.control||false) {
+    var upload = /^\/test\/uploads*/;
+    if(upload.test(url)){
+        next();
+    }
+    else if(req.session.control||false) {
         if (admin.test(url) && pass == "ad_ok") {
             next();
         }

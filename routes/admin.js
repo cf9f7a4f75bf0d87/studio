@@ -1151,7 +1151,7 @@ router.get('/people',function(req,res){
      var sname="RoseOffice";
     adminCl.peopleNum(sname,function(err,data){
         if(err)res.render("error",{message:err});
-        else res.render('peopleNum',{data:data});
+        else res.render('apeopleNum',{data:data});
     });
 });
 
@@ -1310,5 +1310,17 @@ router.post("/login",function(req,res){
         });
 
     }
-})
+});
+
+router.get("/logout",function(req,res){
+    req.session.destroy();
+    res.writeHead(302, {'Location': '/user/login'});
+    res.end();
+});
+router.get("/logout",function(req,res){
+    req.session.destroy();
+    res.json({logout:"ok"});
+    res.end();
+});
+
 module.exports = router;

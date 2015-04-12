@@ -56,7 +56,7 @@ function skill_n2i_init(callback){
 function user_n2i_init(callback){
     user_name = [];
     user.find({},{uname:1},function(err,udata){
-        for(var i=0;i<udata.length;i++){
+        for(var i=0;udata&&i<udata.length;i++){
             user_n2i[udata[i].uname]=udata[i]._id;
             user_name.push(udata[i].uname);
             if(i==udata.length-1){
