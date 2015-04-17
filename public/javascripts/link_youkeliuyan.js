@@ -51,8 +51,6 @@ $(document).ready(function(){
                $(this).parent().remove();
         }
     );
-
-
     $(".input2").click(                                   //删除
         function()
         { var i = $(this).parent();
@@ -60,11 +58,9 @@ $(document).ready(function(){
             alert(i.action);
             i.submit();
             console.log(i);
-            $(this).parent().remove();
+            $(this).parent().parent().remove();
         }
     );
-
-
     $(".input3").click(                                   //删除留言
         function()
         { var i = $(this).parent();
@@ -75,8 +71,6 @@ $(document).ready(function(){
             $(this).parent().remove();
         }
     );
-
-
     $(".input4").click(                                   //留言提交
         function()
         {
@@ -88,8 +82,6 @@ $(document).ready(function(){
             $(this).parent().remove();
         }
     );
-
-
 
     //全选
     $("#w_setall").click(
@@ -181,8 +173,6 @@ $(document).ready(function(){
                 }
              );
 
-
-
                                                //已处理的全选删除
             $("#y_shanchu").click(
                    function()
@@ -219,8 +209,6 @@ $(document).ready(function(){
                       }
             );
 
-
-
             $(".fabiao").click(
                 function()
                 {   
@@ -234,18 +222,12 @@ $(document).ready(function(){
             $(".chakan").click(
                 function()
                 {   
-                   
-                  
                   var x=$(this).parent().parent();
                   x.find('.liuyankuang').toggle();
                   x.find(".textarea").hide();  
-
                 }
-
-
             );
-
-            $(".quxiao").click(
+    $(".quxiao").click(
                 function()
                 {
                    $(this).parent().hide();
@@ -266,8 +248,6 @@ $(document).ready(function(){
                     z.insertBefore($(this_textarea)).show();
                     //liuyan_text
                    z.find(".liuyan_text").html(x);
-
-
                 }
             );
 

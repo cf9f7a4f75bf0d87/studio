@@ -173,6 +173,7 @@ function skilledit(uid,skills,callback){
         uid     = mongoose.Types.ObjectId(uid);
         user.findOne({_id:uid},{uskills:1},function(err,userone){
             var old_skills = userone.uskills;
+            skills = tools.str2arr(skills);
             var add        = skills.uniquelize().each(function(o){return old_skills.contains(o)?null:o});
 
             skillsadd(add,uid,function(err){
