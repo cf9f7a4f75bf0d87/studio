@@ -69,7 +69,7 @@ function return_data(err,data,close,callback){
 
 //封装数据库..
 function odb(f){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));

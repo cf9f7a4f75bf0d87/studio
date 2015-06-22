@@ -19,7 +19,7 @@ var config = require("./config");
 
 
 function odb(f){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -36,7 +36,7 @@ function odb(f){
  * @param callback
  */
 function adminData(sname,callback){
-    mongoose.connect('mongodb://localhost/studio');
+    mongoose.connect('mongodb://localhost:27018/studio');
     console.log(sname);
     var db=mongoose.connection;
     db.on('error',console.error.bind(console,"connetion error:"));
@@ -82,7 +82,7 @@ function adminData(sname,callback){
  * @param callback
  */
 function adminTip(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
     console.log(sname);
 
@@ -167,7 +167,7 @@ function adminTip(sname,callback){
 
 
 function adminTips(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
     console.log(sname);
 
@@ -232,7 +232,7 @@ function maintip_a(arr,val,callback){
  * @param callback
  */
 function adminMsg(sname,what,staute,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
     console.log(sname);
 
@@ -306,7 +306,7 @@ function adminMsg(sname,what,staute,callback){
  * @param callback
  */
 function adminMsg_all(sname,what,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error:"));
@@ -482,8 +482,8 @@ function adminMsgOk(sname,what,smid,staute,callback){
 
 //仅针对游客留言..
 function adminMsgOki(sname,smids,staute,callback) {
-    mongoose.connect("mongodb://localhost/studio");
-    //var db = mongoose.createConnection('localhost',"studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
+    //var db = mongoose.createConnection('localhost:27018',"studio");
     console.log(sname);
     db=mongoose.connection;
     var i=0;
@@ -585,7 +585,7 @@ function adminMsgDel(sname,what,vals,staue,callback){
 
 //*******************新-审核模块******************************
 function leavemsginfo(sname,staute,callback) {
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -604,7 +604,7 @@ function leavemsginfo(sname,staute,callback) {
  */
 function leavemsg(sname,msgids,staute,callback){
 
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error",console.error.bind(console,"connect error:"));
     db.once('open',function(){
@@ -644,7 +644,7 @@ function leavemsg(sname,msgids,staute,callback){
 //留言的删除..
 function leavemsgDel(msgids,callback){
 
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
 
     db.on("error",console.error.bind(console,"connect error:"));
@@ -685,7 +685,7 @@ function leavemsgDel(msgids,callback){
 //用户留言-删除评论
 function leavemsgDelC(id,callback) {
 
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -700,7 +700,7 @@ function leavemsgDelC(id,callback) {
 //用户留言-添加评论
 function leavemsgC(name,email,content,id,callback) {
 
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -717,7 +717,7 @@ function leavemsgC(name,email,content,id,callback) {
 //成员反馈模块-新
 function feedbackmsg(sname,msgids,staute,callback){
 
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error",console.error.bind(console,"connect error:"));
     db.once('open',function(){
@@ -758,7 +758,7 @@ function feedbackmsg(sname,msgids,staute,callback){
  */
 //成员反馈-  删除成员反馈
 function feedbackmsgDel(msgids,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
 
     db.on("error",console.error.bind(console,"connect error:"));
@@ -798,7 +798,7 @@ function feedbackmsgDel(msgids,callback){
 
 //成员反馈-  添加回复
 function feedbackmsgC(name,email,content,id,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -814,7 +814,7 @@ function feedbackmsgC(name,email,content,id,callback){
 //成员反馈-  删除回复
 function feedbackmsgDelC(id,callback) {
 
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -828,7 +828,7 @@ function feedbackmsgDelC(id,callback) {
 
 //加入组织申请
 function joingroupmsg(sname,callback) {
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on("error", console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -905,7 +905,7 @@ function joingroupEx(sname,msgids,staute,callback) {
 //审核未通过处理..
 //单条..
 function joingroupDel(sname,mid,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -941,7 +941,7 @@ function joingroupDel(sname,mid,callback){
 
 //数组..
 function joingroupDelI(sname,mids,errs,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -963,7 +963,7 @@ function joingroupDelI(sname,mids,errs,callback){
 //审核通过处理..
 //递归调用..处理数组..
 function joingroupI(sname,msgids,staute,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -1027,7 +1027,7 @@ function joingroupI(sname,msgids,staute,callback){
 
 
 function joingroupString(sname,msgids,staute,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -1113,7 +1113,7 @@ function joingroupString(sname,msgids,staute,callback){
  */
 
 function projectsmsg(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
     console.log("start");
     db.on('error',console.error.bind(console,"connect error:"));
@@ -1159,7 +1159,7 @@ function projectmsgDeal(sname,msgids,status,callback){
  * @param callback
  */
 function projectmsgStringNo(sname,msgids,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -1185,7 +1185,7 @@ function projectmsgStringNo(sname,msgids,callback){
  * @param callback
  */
 function projectmsgStringYes(sname,msgids,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -1249,7 +1249,7 @@ function projectmsgStringYes(sname,msgids,callback){
  * @param callback
  */
 function projectmsgArrayNo(sname,msgids,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     db.on('error', console.error.bind(console, "connect error:"));
     db.once('open', function () {
@@ -1361,7 +1361,7 @@ function delnews(cid,callback){
  * @param callback
  */
 function eventsInfo(callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
 
     db.on('error', console.error.bind(console, "connect error:"));
@@ -1391,7 +1391,7 @@ function eventsInfo(callback){
  * @param callback
  */
 function eventsSendout(sname,etitle,econtent,epics,epubTime,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
     console.log(sname);
 
@@ -1442,7 +1442,7 @@ function delevent(cid,callback){
  * @param callback
  */
 function acInfo(callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db = mongoose.connection;
 
     db.on('error', console.error.bind(console, "connect error:"));
@@ -1701,7 +1701,7 @@ function user_out_project(uid,pid,callback){
  *      2 用引用存储一个用户的id
  */
 function teamInfo(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db= mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error: "));
@@ -1731,7 +1731,7 @@ function teamInfo(sname,callback){
  * @param callback
  */
 function teamInfoEdit(sname,scontent,teacher,leader,stelephone,semail,saddress,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -1815,7 +1815,7 @@ function find_data(err,data,close,callback){
  * @param callback
  */
 function teamInfoSendout(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -1844,7 +1844,7 @@ function teamInfoSendout(sname,callback){
  */
 /*
 function teamInfoSendoutNew(sname,group,leader,date,content,pic,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -1952,7 +1952,7 @@ function delmsg(cid,callback){
  */
 /*
 function teamInfoSendoutUpdate(sname,id,group,leader,date,content,pic,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -1975,7 +1975,7 @@ function teamInfoSendoutUpdate(sname,id,group,leader,date,content,pic,callback){
  * @param callback
  */
 function teamData(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -2044,7 +2044,7 @@ function addUser(uname,uid,uemail,group,ugrade,uheadPic,usex,uroll,upwd,callback
  * @param callback
  */
 function editUser(sname,id,uname,uid,unickname,uemail,ugroupId,ugrade,uheadPic,usex,uscore,uroll,uskills,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
     var group=mongoose.Types.ObjectId(ugroupId);
     console.log(group);
@@ -2108,7 +2108,7 @@ function editUser(sname,id,uname,uid,unickname,uemail,ugroupId,ugrade,uheadPic,u
  * @param callback
  */
 function removeUser(sname,id,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     var mid=mongoose.Types.ObjectId(id);
@@ -2141,7 +2141,7 @@ function removeUser(sname,id,callback){
  * @param callback
  */
 function peopleInfo(sname,group,pagesize,pagenow,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));
@@ -2332,7 +2332,7 @@ function deleteuser(cid,callback){
  * @param callback
  */
 function peopleNum(sname,callback){
-    mongoose.connect("mongodb://localhost/studio");
+    mongoose.connect("mongodb://localhost:27018/studio");
     var db=mongoose.connection;
 
     db.on('error',console.error.bind(console,"connect error"));

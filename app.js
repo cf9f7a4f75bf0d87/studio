@@ -55,45 +55,50 @@ app.use(bodyParser({
 //login control.
 app.use(function(req,res,next){
     var url=req.originalUrl;
-    console.log(url);
+    console.log(url+"aaaaaa");
     var admin = /^\/admin\/login*/;
     var user = /^\/user\/login*/;
     var upload = /^\/test\/uploads*/;
+    if(/\/favicon.ico/.test(url)){next();}
     if(req.session.control||false||upload.test(url)){
+        console.log("pass method 1..");
         next();
     }
-    else if( user.test(url)||admin.test(url)){next();}
+    else if( user.test(url)||admin.test(url)){
+        console.log("pass method 2..");
+        next();}
     else {
+        console.log("not pass method 3..");
         res.writeHead(302,{'Location':'/user/login'});
         res.end();
     }
 })
 
 //visit control
-app.use(function(req,res,next){
-    var pass =req.session.pass;
-    var url = req.originalUrl;
-    var admin = /^\/admin*/;
-    var user = /^\/user*/;
-    var upload = /^\/test\/uploads*/;
-    if(upload.test(url)){
-        next();
-    }
-    else if(req.session.control||false) {
-        if (admin.test(url) && pass == "ad_ok") {
-            next();
-        }
-        else if (user.test(url) && pass == "user_ok") {
-            next();
-        }
-        else {
-            res.writeHead(302, {'Location': '/user/login'});
-            res.end();
-        }
-    }else{
-        next();
-    }
-})
+//app.use(function(req,res,next){
+//    var pass =req.session.pass;
+//    var url = req.originalUrl;
+//    var admin = /^\/admin*/;
+//    var user = /^\/user*/;
+//    var upload = /^\/test\/uploads*/;
+//    if(upload.test(url)){
+//        next();
+//    }
+//    else if(req.session.control||false) {
+//        if (admin.test(url) && pass == "ad_ok") {
+//            next();
+//        }
+//        else if (user.test(url) && pass == "user_ok") {
+//            next();
+//        }
+//        else {
+//            res.writeHead(302, {'Location': '/user/login'});
+//            res.end();
+//        }
+//    }else{
+//        next();
+//    }
+//})
 app.use('/', routes);
 app.use('/users', users);
 app.use('/user',user);
