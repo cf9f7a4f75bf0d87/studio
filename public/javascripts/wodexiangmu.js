@@ -4,7 +4,7 @@ $(document).ready(function(){
 
 
 	$(".field").change(function(){
-        alert(this.value);
+        //alert(this.value);
         var sel = this.value;
         $.ajax({
             url:"myProjects",
@@ -12,7 +12,7 @@ $(document).ready(function(){
             data:{status:sel},
             dataType:"json",
             success:function(msg){
-                alert("success");
+                //alert("success");
                 $(".text").remove();
                 var data = msg.data;
                  for(var i=0; i<data.length;i++){
@@ -23,7 +23,7 @@ $(document).ready(function(){
                      var a = $('<a href="'+data[i].pdocs[j]+'"><span class="span7">需求文档</span></a>');
                      a.appendTo(div);
                  }
-                     var exit = $('<span class="span8"><input type="submit" class="quitMyProject" value="我不想干啦"></span>')
+                     var exit = $('<span class="span8"><input type="submit" class="quitMyProject" value="我不想干啦"></span>');
                  if(sel==0){
                     exit.appendTo(div);
                  }
@@ -36,7 +36,7 @@ $(document).ready(function(){
     $(document).on("click",".quitMyProject",function() {
         var p = $(this).parent().parent();
         var pid = $(p).find(".pid").val();
-        alert(pid);
+        //alert(pid);
         $.ajax({
             url: "projectQuit",
             type: "post",
@@ -50,7 +50,7 @@ $(document).ready(function(){
                 }
             },
             error: function (err) {
-                alert("error" + err)
+                alert("error: " + err)
             }
         });
     });

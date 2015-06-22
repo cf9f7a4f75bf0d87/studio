@@ -1,2 +1,13 @@
-<h1><%= message %></h1>
+<h1><% if(!message){
+        %><% 反正出错啦  %><%}
+        else if(typeof(message)=='object'){
+            for(var n in message){
+                %> <%=n+":"+message[n]%>
+                </h1><h1>
+                <%
+            }
+        }else {
+            %><%=message%><%
+
+    } %></h1>
 <a href="javascript:history.go(-1)">返回</a>

@@ -59,7 +59,7 @@ app.use(function(req,res,next){
     var admin = /^\/admin\/login*/;
     var user = /^\/user\/login*/;
     var upload = /^\/test\/uploads*/;
-    if(/\/favicon.ico/.test(url)){next();}
+    if(/\/favicon.ico/.test(url)){next();}  // special url should pass first , but these are not enough , will add more later.. or change another method.
     if(req.session.control||false||upload.test(url)){
         console.log("pass method 1..");
         next();
@@ -75,30 +75,31 @@ app.use(function(req,res,next){
 })
 
 //visit control
-//app.use(function(req,res,next){
-//    var pass =req.session.pass;
-//    var url = req.originalUrl;
-//    var admin = /^\/admin*/;
-//    var user = /^\/user*/;
-//    var upload = /^\/test\/uploads*/;
-//    if(upload.test(url)){
-//        next();
-//    }
-//    else if(req.session.control||false) {
-//        if (admin.test(url) && pass == "ad_ok") {
-//            next();
-//        }
-//        else if (user.test(url) && pass == "user_ok") {
-//            next();
-//        }
-//        else {
-//            res.writeHead(302, {'Location': '/user/login'});
-//            res.end();
-//        }
-//    }else{
-//        next();
-//    }
-//})
+app.use(function(req,res,next){
+    var pass =req.session.pass;
+    var url = req.originalUrl;
+    var admin = /^\/admin*/;
+    var user = /^\/user*/;
+    var upload = /^\/test\/uploads*/;
+
+    if(req.session.control||false) {  //when login, will get a control flag to start to execute visit-control function.
+        if(upload.test(url)||/^\/favicon.ico$/.test(url)){
+            next();
+        }
+        else if (admin.test(url) && pass == "ad_ok") {
+            next();
+        }
+        else if (user.test(url) && pass == "user_ok") {
+            next();
+        }
+        else {
+            res.writeHead(302, {'Location': '/user/404'});
+            res.end();
+        }
+    }else{ // 这是啥，我也不清楚。。 放行了登录控制的重定向。。其他呢？
+        next();
+    }
+})
 app.use('/', routes);
 app.use('/users', users);
 app.use('/user',user);

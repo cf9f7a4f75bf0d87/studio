@@ -9,12 +9,12 @@
     <link rel="stylesheet" type="text/css" href="/stylesheets/top.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/header.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/nav.css">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/leftnav.css">
+    <link rel="stylesheet" type="text/css" href="/stylesheets/aleftnav.css">
     <link rel="stylesheet" type="text/css" href="/stylesheets/b2.css">
 
 
     <script type="text/javascript" src="/javascripts/jquery-2.1.1.js"></script>
-
+    <script type="text/javascript" src="/javascripts/small.js"></script>
     <script type="text/javascript" src="/javascripts/link_fabu.js"></script>
     <script type="text/javascript" src="/javascripts/link_b2.js"></script>
 </head>
@@ -37,93 +37,53 @@
 
 <div id="a">
     <h> 团队介绍</h>
+    <div id="old">
+        <span id="tuandui" ><%=data.sname%></span>
+        <input type="image" value="修改" class="xiugai"  >
+        </br>
+        <span class="s1">负责人: <span id="fuzeren"><%=data.leader%></span>   </span>
+        <span class="s2">老师: <span  id="laoshi"><%=data.teacher%></span>     </span>
+        <span id="gengxinriqi"><%=data.uptime.toLocaleDateString()%></span>
+        <span class="s3">更新日期:</span>
+        </br>
+        <span class="s4">邮箱:</span>  <span id="youxiang"><%=data.semail%></span>
+        <span class="s5" >地址:</span>  <span id="dizhi"><%=data.saddress%></span>
+        <span class="s6">电话:</span>  <span id="dianhua"><%=data.stelephone%></span>
+        <br>
+        <div>
+            <div  class="text">
+                <p id ="p1"><%=data.scontent%></p>
+            </div>
+            <div class="img">
+                <img src="/images/u55.png" style="width:auto; height:auto;  float:left;" >
+            </div>
+        </div>
+    </div>
+    <!--   /////////////////////////////////////////////////////////////       编辑///////////////////////////////// -->
+    <div id="editDiv" style="display:none;">
+        <input type="text" id="tuandui_x" class="input1">
+        <input type="image" value="确认"  class="queren">
+        </br>
+        <span class="s1">负责人:<input type="text" id="fuzeren_x" class="input1">   </span>
+        <span class="s2">老师: <input type="text" id="laoshi_x" class="input1">     </span>
+        <input type="text" id ="gengxinriqi_x" class="input1">
+        <span class="s3">更新日期:</span>
+        </br>
+        <span class="s4">邮箱:</span> <input type="text" id="youxiang_x" class="input1">
+        <span class="s6">电话:</span>   <input type="text" id ="dianhua_x" class="input1">
+        <span class="s5" >地址: <input type="text" id="dizhi_x" >   </span>
+        <div>
+            <div  class="text">
+                <textarea id="content_x"  class="text1" ></textarea>
+            </div>
+            <div class="img" >
+                <p id="change">更改图片</p>
+                <div class="none"> <input type="file" class="file">  </div>
+            </div>
+        </div>
+    </div>
+
     <div id="b">
-        <div id="old">
-
-
-            <span id="tuandui" ><%=data.sname%></span>
-            <input type="image" value="修改" class="xiugai"  >
-            </br>
-
-            <span class="s1">负责人: <span id="fuzeren"><%=data.leader%></span>   </span>
-
-
-            <span class="s2">老师: <span  id="laoshi"><%=data.teacher%></span>     </span>
-
-
-            <span id="gengxinriqi">2014-9-18 21:22</span>
-            <span class="s3">更新日期:</span>
-
-
-
-            </br>
-
-
-
-            <span class="s4">邮箱:</span>  <span id="youxiang"><%=data.semail%></span>
-
-
-            <span id="dizhi"><%=data.saddress%></span>
-            <span class="s5" >地址:</span>
-
-            <span class="s6">电话:</span>  <span id="dianhua"><%=data.stelephone%></span>
-            <br>
-
-            <div>
-                <div  class="text">
-                    <p id ="p1"><%=data.scontent%></p>
-                </div>
-
-                <div class="img">
-                    <img src="/images/u55.png" style="width:330px; height:100px;  float:left; margin-left:16px; margin-top:36px; " >
-                </div>
-            </div>
-        </div>
-
-
-        <!--   /////////////////////////////////////////////////////////////       编辑///////////////////////////////// -->
-        <div id="editDiv" style="display:none;">
-
-            <input type="text" id="tuandui_x" class="input1">
-            <input type="image" value="确认"  class="queren">
-            </br>
-
-            <span class="s1">负责人:<input type="text" id="fuzeren_x" class="input1">   </span>
-
-
-            <span class="s2">老师: <input type="text" id="laoshi_x" class="input1">     </span>
-
-            <input type="text" id ="gengxinriqi_x" class="input1">
-            <span class="s3">更新日期:</span>
-
-
-
-
-            </br>
-
-
-
-            <span class="s4">邮箱:</span> <input type="text" id="youxiang_x" class="input1">
-
-
-
-            <span class="s6">电话:</span>   <input type="text" id ="dianhua_x" class="input1">
-
-
-            <span class="s5" >地址: <input type="text" id="dizhi_x" >   </span>
-
-            <div>
-                <div  class="text">
-                    <textarea id="content_x"  class="text1" ></textarea>
-                </div>
-
-                <div class="img" >
-                    <p id="change">更改图片</p>
-                    <div class="none"> <input type="file" class="file">  </div>
-                </div>
-            </div>
-        </div>
-
 
         <%
          if(data.sculture==null||data.sculture==""||data.sculture.length==0){
@@ -137,6 +97,7 @@
             <span class="t1"><%=data.sculture[i].cname%></span>
             <span >更新日期:</span><span class="t2"><%=data.sculture[i].ctime.toLocaleDateString()%></span>
             <input type="image" class="text_edit" value="修改">
+            <input type="image" class="text_del" value="删除">
             </br>
 
             <div class="t3">
@@ -151,7 +112,7 @@
         <div id="t_new">
             <input type="hidden" class="t0_x" hidden>
             <input class="t1_x">
-            <span hidden>更新日期:</span><input hidden class="t2_x"></span>
+            <span >更新日期(format-2015-02-30 11:22:33):</span><input class="t2_x" placeholder="2015-02-30 11:22:33"></span>
             <input type="image" class="text_queren" value="确定">
             </br>
 
@@ -165,6 +126,7 @@
             <span class="t1"></span>
             <span >更新日期:</span><span class="t2"></span>
             <input type="image" class="text_edit" value="修改">
+            <input type="image" class="text_del" value="删除">
             </br>
             <div class="t3">
 

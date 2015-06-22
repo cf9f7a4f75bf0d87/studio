@@ -1701,20 +1701,11 @@ function user_out_project(uid,pid,callback){
  *      2 用引用存储一个用户的id
  */
 function teamInfo(sname,callback){
-    mongoose.connect("mongodb://localhost:27018/studio");
-    var db= mongoose.connection;
-
-    db.on('error',console.error.bind(console,"connect error: "));
-    db.once('open',function(){
-        //解引用,  教师采用引用存储..
+    tools.odb(function(close){
+            //解引用,  教师采用引用存储..  暂时取消复杂引用逻辑..使用普通字符串记录名字即可..
        // studio.find({sname:sname}).populate("sleader steacher").select("sname scontent sleader   steacher stelephone semail saddress sculture").exec(function(err,doc){
-        studio.find({sname:sname}).select("sname scontent leader teacher stelephone semail saddress sculture").exec(function(err,doc){
-
-            db.close();
-            console.log(doc);
-            if(err) callback(err,null);
-            else if(doc ==null) callback("no data",null);
-            else callback(null,doc[0]);
+        studio.find({sname:sname}).select("sname scontent leader teacher stelephone semail saddress uptime sculture").exec(function(err,data){
+           tools.return_data(err,data[0],close,callback);
         });
     });
 }
@@ -1723,24 +1714,18 @@ function teamInfo(sname,callback){
  * 编辑工作室的部分信息..
  * @param sname
  * @param scontent
- * @param steacher
- * @param sleader
+ * @param teacher
+ * @param leader
  * @param stelephone
  * @param semail
  * @param saddress
+ * @param uptime
  * @param callback
  */
-function teamInfoEdit(sname,scontent,teacher,leader,stelephone,semail,saddress,callback){
-    mongoose.connect("mongodb://localhost:27018/studio");
-    var db=mongoose.connection;
-
-    db.on('error',console.error.bind(console,"connect error"));
-    db.once('open',function(){
-        studio.update({sname:sname},{$set:{sname:sname,scontent:scontent,teacher:teacher,leader:leader,stelephone:stelephone,semail:semail,saddress:saddress,uptime:new Date()}},function(err,num){
-            db.close();
-            if(err) callback(err);
-            else if(num!=1) callback("未更新成功..");
-            else callback(null);
+function teamInfoEdit(sname,scontent,teacher,leader,stelephone,semail,saddress,uptime,callback){
+   tools.odb(function(close){
+        studio.update({sname:sname},{$set:{sname:sname,scontent:scontent,teacher:teacher,leader:leader,stelephone:stelephone,semail:semail,saddress:saddress,uptime:uptime}},function(err,num){
+            tools.update_deal(close,err,num,callback);
         })
     })
 }

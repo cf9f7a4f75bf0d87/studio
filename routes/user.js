@@ -17,6 +17,9 @@ router.get('/index', function(req, res) {
         res.render('uindex', { title: 'user'});
 });
 
+router.get('/404',function(req,res){
+  tools.render_deal({msgid:"404",message:"can't find this page or no access.."},res,null,"error");
+});
 //个人资料..
 router.get('/info',function(req,res){
         userCl.getInfo(req.session.name,function(err,userone)
@@ -114,7 +117,7 @@ router.get('/skillSame', function(req,res) {
             if(err){res.render('error',{message:err})}
             else{
                 var data = docs;
-                console.log(docs.length);
+                if(docs.length==0){res.render("skillSame",{data:[]})}
                 for(var i=0;i<docs.length;i++){
                      data[i].skowners = docs[i].skowners.each(function(o){return (o.uname==username)?null:o});
                     if(i==docs.length-1){
@@ -123,8 +126,6 @@ router.get('/skillSame', function(req,res) {
                 }
             }
         });
-        //原始版本..
-        // userCl.findSameSkillUser(req, res);
 });
 
 //项目信息..

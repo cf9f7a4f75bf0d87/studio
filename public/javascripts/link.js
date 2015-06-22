@@ -6,7 +6,7 @@ window.onload=function(){
        lna[2].innerText="";
        lna[3].innerText="";
        lna[4].innerText=""; 
-       lna[0].setAttribute("href","projectMy");
+       lna[0].setAttribute("href","myProjects");
        lna[1].setAttribute("href","projectsList")
 }
    

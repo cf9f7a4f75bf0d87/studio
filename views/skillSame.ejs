@@ -18,7 +18,10 @@
     </div>
     <div id="content">
         <h2><span>同</span><span>道</span><span>中</span>人</h2>
-
+        <% if(data.length==0){
+            %><div style="margin-left:80px;font-size:1.2em;color:dodgerblue;">没有人呢。。</div><%
+        }
+         %>
         <% for(var i=0;i<data.length;i++){
                 for(var j=0;data[i].skowners&&(j<data[i].skowners.length);j++){%>
         <p><%=data[i].skowners[j].uname%> 跟你一样喜欢<%=data[i].skname%></p>
