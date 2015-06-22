@@ -18,6 +18,7 @@ var skill_name = [];
 
 var user_n2i = {};
 var user_name = {};
+var user_total_number = 0;
 
 function group_n2i_init(callback){
         group_name = [];
@@ -55,14 +56,17 @@ function skill_n2i_init(callback){
 
 function user_n2i_init(callback){
     user_name = [];
+    user_total_number = 0;
     user.find({},{uname:1},function(err,udata){
         for(var i=0;udata&&i<udata.length;i++){
             user_n2i[udata[i].uname]=udata[i]._id;
             user_name.push(udata[i].uname);
+            user_total_number += 1;
             if(i==udata.length-1){
                 callback();
                 exports.user_name = user_name;
                 exports.user_n2i = user_n2i;
+                exports.user_total_number = user_total_number;
             }
         }
     })

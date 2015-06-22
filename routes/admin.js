@@ -1175,10 +1175,12 @@ router.get('/people/allgroup', function(req, res) {
 
 router.get("/people/peopleInfo",function(req,res){
     var pagesize = 3;
-    var pagenow = (req.query.now<10||req.query.now>=0)?req.query.now:0;
+    var max_num = Math.round(config.user_total_number/pagesize),min_num = 0;
+    var pagenow = (req.query.now<max_num&&req.query.now>=min_num)?req.query.now:0;
+    console.log(pagenow);
     adminCl.peopleinfoall(pagesize,pagenow,function(err,data){
-        tools.render_deal(err,res,data,"apeopleall");})
-})
+        tools.render_deal(err,res,{info:data,now:pagenow,max_num:max_num},"apeopleall");})
+});
 
 router.post("/people/infoEdit",function(req,res){
     adminCl.setpeopleinfo(req.body.cid,req.body.name,req.body.uid,req.body.email,req.body.gname,req.body.roll,req.body.grade,req.body.score,function(err){

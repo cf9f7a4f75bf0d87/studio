@@ -32,17 +32,10 @@
 	        <a href="#">全部人员</a>
 	      </span>
 </div>
-
-
 <div id="a">
-
     <div id="b">
         <h>全部人员</h>
         <table>
-
-
-
-
             <tr>
                 <td class="a">姓名</td>
                 <td class="b">学号</td>
@@ -54,19 +47,21 @@
                 <td class="xiugai">编辑</td>
                 <td class="chuli">删除</td>
             </tr>
-
-            <% if(typeof(data)=="object"){
-                for(var i=0;i<data.length;i++){%>
-
+            <%
+            var info = data.info;
+            var now = data.now;
+            %>
+            <% if(typeof(info)=="object"){
+                for(var i=0;i<info.length;i++){%>
             <tr class="old">
-                <td hidden class="i"><%=data[i]._id%></td>
-                <td class="a"><%=data[i].uname%></td>
-                <td class="b"><%=data[i].uid%></td>
-                <td class="c"><%=data[i].ugroupId.gname%></td>
-                <td class="d"><%=data[i].uemail%></td>
-                <td class="e"><%=data[i].uroll%></td>
-                <td class="f"><%=data[i].ugrade%></td>
-                <td class="g"><%=data[i].uscore%></td>
+                <td hidden class="i"><%=info[i]._id%></td>
+                <td class="a"><%=info[i].uname%></td>
+                <td class="b"><%=info[i].uid%></td>
+                <td class="c"><%=info[i].ugroupId.gname%></td>
+                <td class="d"><%=info[i].uemail%></td>
+                <td class="e"><%=info[i].uroll%></td>
+                <td class="f"><%=info[i].ugrade%></td>
+                <td class="g"><%=info[i].uscore%></td>
                 <td><input type="image" src="/images/bianji.png" class="xiugai"></td>
                 <td><input type="image" src="/images/u53.png" class="shanchu"></td>
             </tr>
@@ -74,14 +69,7 @@
             }
             }%>
 
-
-
-
-
-
-
             <!--  模板 new  超级管理员-->
-
             <tr id="new">
                 <td hidden><input type="hidden" class="i_x"></td>
                 <td > <input type="text" class="a_x"> </td>
@@ -97,10 +85,7 @@
                     </select>
                     <span class="c_x"></span>
                 </td>
-
                 <td > <input type="text" class="d_x"></td>
-
-
                 <td >
                     <select class="o2">
                         <option value="0" class="o0">0</option>
@@ -109,8 +94,6 @@
                     </select>
                     <span class="e_x"></span>
                 </td>
-
-
                 <td >  <input type="text" class="f_x"> </td>
                 <td >  <input type="text" class="g_x"> </td>
                 <td><img src="/images/dui.png" class="queren"></td>
@@ -120,11 +103,9 @@
 
 
             <!-- 模板 new_2 管理员 -->
-
             <tr id="new_2">
                 <td > <input type="text" class="a_x"> </td>
                 <td > <input type="text" class="b_x"> </td>
-
                 <td>
                     <select class="o">
                         <option value="group0" class="op0">group0</option>
@@ -136,24 +117,16 @@
                     </select>
                     <span class="c_x"></span>
                 </td>
-
                 <td > <input type="text" class="d_x"></td>
-
-
                 <td >
                     <span class="e_x"></span>
                 </td>
-
-
                 <td >  <input type="text" class="f_x"> </td>
                 <td >  <input type="text" class="g_x"> </td>
                 <td><img src="/images/dui.png" class="queren"></td>
                 <td><img src="/images/u53.png" class="shanchu"></td>
             </tr>
-
-
             <!--  模板 old -->
-
             <tr  id="old">
                 <td hidden class="i"></td>
                 <td class="a"></td>
@@ -167,19 +140,11 @@
                 <td><img src="/images/u53.png" class="shanchu"></td>
             </tr>
         </table>
-
         </br>
         </br>
-        <p1><a> <上一页</a> </p1>
-        <p2><a> 下一页></a> </p2>
-
-
-
+        <p1><a href="peopleInfo?now=<%=(now<=0?0:parseInt(now)-1)%>"> &gt;上一页</a> </p1>
+        <p2><a href="peopleInfo?now=<%=(now>=data.max_num-1?now:parseInt(now)+1)%>"> 下一页&lt;</a> </p2>
     </div>
 </div>
-
-
-
-
 </body>
 </html>

@@ -3,8 +3,8 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style type="text/css">
-        #a { width:1002px; height:728px;border:1px #000000 solid; float:left; margin-left: 2px;}
-        #b {width: 400px; height: 728px; border: 1px #000000 solid; float: left;}
+        #a { width:1002px; height:600px;border:1px #000000 solid; float:left; margin-left: 2px;}
+        #b {width: 400px; height: 600px; border: 1px #000000 solid; float: left;}
         #c {width: 598px; height: 728px; border: 1px #000000 solid; float: left;}
 
         #h1  {font-size: 36px;  padding-left: 20px; padding-top: 20px; margin-top: 4px; margin-bottom: 0px; }
@@ -38,8 +38,8 @@
 <div class="contentnav">
       <span>
         <a href="/admin/">螺丝工作室后台管理 ></a>
-        <a href="/admin/people">人员</a>
-        <a href="就是这里=.=">#</a>
+        <a href="/admin/people">人员 ></a>
+        <a href="#">就是这里=.=</a>
       </span>
 </div>
 
@@ -49,12 +49,14 @@
          <ul>
             <% if(typeof(data)=="object"&&data.length>0){%>
            <%for(var i=0;i<data.length;i++){%>
-               <li><b><%=data[i].name%></b>:<%=data[i].num%></li>
+               <li><b><%=data[i].name%></b>:&nbsp;&nbsp;<%=data[i].num%>个成员</li>
            <%}}else{%>
                <li>没有啦..</li>
            <%}%>
         </ul>
-
+    </div>
+    <div id="c">
+        <h2>人员的信息还在调试..之后再发ha..</h2>
     </div>
 </div>
 </body>
