@@ -59,8 +59,8 @@ app.use(function(req,res,next){
     var admin = /^\/admin\/login*/;
     var user = /^\/user\/login*/;
     var upload = /^\/test\/uploads*/;
-    if(/\/favicon.ico/.test(url)){next();}  // special url should pass first , but these are not enough , will add more later.. or change another method.
-    if(req.session.control||false||upload.test(url)){
+    if(/^\/show$/.test(url)||/\/favicon.ico/.test(url)){next();}  // special url should pass first , but these are not enough , will add more later.. or change another method.
+    else if(req.session.control||false||upload.test(url)){
         console.log("pass method 1..");
         next();
     }
@@ -72,7 +72,7 @@ app.use(function(req,res,next){
         res.writeHead(302,{'Location':'/user/login'});
         res.end();
     }
-})
+});
 
 //visit control
 app.use(function(req,res,next){
@@ -83,7 +83,7 @@ app.use(function(req,res,next){
     var upload = /^\/test\/uploads*/;
 
     if(req.session.control||false) {  //when login, will get a control flag to start to execute visit-control function.
-        if(upload.test(url)||/^\/favicon.ico$/.test(url)){
+        if(upload.test(url)||/^\/favicon.ico$/.test(url)||/\/^show$/.test(url)){
             next();
         }
         else if (admin.test(url) && pass == "ad_ok") {
